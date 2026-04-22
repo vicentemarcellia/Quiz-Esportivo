@@ -1,323 +1,330 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<title>Quiz Infantil</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Quiz Esportivo</title>
 
-<style>
-body{
-    margin:0;
-    font-family: 'Comic Sans MS', Arial;
-    background: linear-gradient(#0b2a5b, #061a3a);
-    color:white;
-}
+    <style>
+        :root {
+            --primary: #FFD700;
+            --secondary: #00DBDE;
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+        }
 
-/* TOPO */
-.topo{
-    display:flex;
-    justify-content:space-between;
-    padding:20px 40px;
-}
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', 'Comic Sans MS', cursive, sans-serif;
+            background: radial-gradient(circle at top, #1e293b, #0f172a);
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
 
-.titulo{
-    font-size:30px;
-    font-weight:bold;
-    background: linear-gradient(to right, yellow, cyan, lime);
-    -webkit-background-clip:text;
-    color:transparent;
-}
+        /* TOPO */
+        .topo {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+            background: rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
 
-.pontos{
-    background:#0c3c8c;
-    padding:10px 20px;
-    border-radius:15px;
-}
+        .titulo {
+            font-size: clamp(1.2rem, 5vw, 2rem);
+            font-weight: 900;
+            background: linear-gradient(45deg, #FFD700, #FF0080, #00DBDE);
+            -webkit-background-clip: text;
+            color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
 
-/* GRID */
-.grid{
-    display:grid;
-    grid-template-columns: repeat(5, 150px);
-    justify-content:center;
-    gap:20px;
-}
+        .pontos {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 25px;
+            border-radius: 50px;
+            border: 2px solid var(--secondary);
+            font-weight: bold;
+            font-size: 1.2rem;
+            box-shadow: 0 0 15px rgba(0, 219, 222, 0.3);
+        }
 
-/* CARTAS */
-.card{
-    height:110px;
-    background:#222;
-    border-radius:15px;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    cursor:pointer;
-}
+        /* GRID */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+            padding: 30px 5%;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
 
-.card:hover{ transform:scale(1.05); }
-.card.used{ opacity:0.3; pointer-events:none; }
+        /* CARTAS */
+        .card {
+            aspect-ratio: 1/1;
+            background: var(--card-bg);
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 3px solid transparent;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
 
-/* MODAL */
-.modal{
-    position:fixed;
-    width:100%;
-    height:100%;
-    top:0;
-    left:0;
-    background:rgba(0,0,0,0.7);
-    display:none;
-    justify-content:center;
-    align-items:center;
-}
+        .card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: var(--secondary);
+            box-shadow: 0 15px 30px rgba(0, 219, 222, 0.2);
+        }
 
-.box{
-    background:#fff;
-    color:black;
-    padding:20px;
-    border-radius:20px;
-    width:420px;
-    text-align:center;
-    position:relative;
-}
+        .card i {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
 
-.box img{ width:140px; }
+        .card span {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #94a3b8;
+        }
 
-.pergunta{ font-size:20px; margin:10px 0; }
+        .card.used {
+            opacity: 0.4;
+            filter: grayscale(1);
+            pointer-events: none;
+            transform: scale(0.9);
+        }
 
-.opcao{
-    margin:8px;
-    padding:12px;
-    border-radius:15px;
-    color:white;
-    cursor:pointer;
-}
+        /* MODAL */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            padding: 20px;
+        }
 
-.a{background:#1e90ff;}
-.b{background:#28a745;}
-.c{background:#8a2be2;}
+        .box {
+            background: white;
+            color: #1e293b;
+            padding: 40px 30px;
+            border-radius: 30px;
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+            position: relative;
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
 
-.correct{background:green !important;}
-.wrong{background:red !important;}
+        @keyframes popIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
 
-.close{
-    position:absolute;
-    top:-10px;
-    right:-10px;
-    background:red;
-    color:white;
-    border-radius:50%;
-    width:30px;
-    height:30px;
-    cursor:pointer;
-}
+        .emoji-pergunta {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            display: block;
+        }
 
-/* MASCOTE */
-.mascote{
-    position:fixed;
-    bottom:20px;
-    left:20px;
-    text-align:center;
-}
+        .pergunta {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            line-height: 1.2;
+        }
 
-.mascote img{
-    width:80px;
-}
+        .opcao {
+            margin: 12px 0;
+            padding: 16px;
+            border-radius: 15px;
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.2s;
+            border: none;
+            width: 100%;
+        }
 
-.balao{
-    background:white;
-    color:black;
-    padding:10px;
-    border-radius:15px;
-    margin-bottom:5px;
-    max-width:150px;
-    font-size:14px;
-}
+        .a { background: #3b82f6; }
+        .b { background: #10b981; }
+        .c { background: #8b5cf6; }
 
-/* FINAL */
-.final{
-    display:none;
-    text-align:center;
-    margin-top:40px;
-}
-</style>
+        .opcao:active { transform: scale(0.95); }
+
+        .correct { background: #059669 !important; box-shadow: 0 0 20px rgba(5, 150, 105, 0.5); }
+        .wrong { background: #ef4444 !important; }
+
+        /* MASCOTE */
+        .mascote {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            align-items: flex-end;
+            pointer-events: none;
+        }
+
+        .balao {
+            background: white;
+            color: black;
+            padding: 12px 20px;
+            border-radius: 20px 20px 0 20px;
+            margin-right: 10px;
+            max-width: 180px;
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        .mascote-img { font-size: 4rem; }
+
+        /* FINAL */
+        #final {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: var(--bg);
+            z-index: 200;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+    </style>
 </head>
 
 <body>
 
 <div class="topo">
-<div class="titulo">🏆 QUIZ ESPORTIVO</div>
-<div class="pontos">⭐ <span id="score">0</span></div>
+    <div class="titulo">🏆 MEGA QUIZ</div>
+    <div class="pontos">⭐ <span id="score">0</span></div>
 </div>
 
 <div class="grid" id="grid"></div>
 
 <div class="modal" id="modal">
-<div class="box" id="box"></div>
+    <div class="box" id="box"></div>
 </div>
 
-<div class="final" id="final">
-<h1>🎉 Parabéns!</h1>
-<p>Você completou o jogo!</p>
+<div id="final">
+    <span style="font-size: 5rem;">🎉</span>
+    <h1 style="font-size: 3rem; margin: 10px 0;">INCRÍVEL!</h1>
+    <p style="font-size: 1.5rem; color: var(--secondary)">Você completou todo o desafio!</p>
+    <button onclick="location.reload()" style="margin-top:20px; padding: 15px 30px; border-radius: 50px; border:none; background: var(--primary); font-weight: bold; cursor:pointer;">JOGAR DE NOVO</button>
 </div>
 
-<!-- MASCOTE -->
 <div class="mascote">
-<div class="balao" id="falaMascote">Vamos jogar!</div>
-<img src="https://cdn-icons-png.flaticon.com/512/616/616408.png">
+    <div class="balao" id="falaMascote">Escolha uma carta para começar!</div>
+    <div class="mascote-img">🤖</div>
 </div>
 
-<!-- ÁUDIOS -->
 <audio id="acerto" src="https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3"></audio>
 <audio id="erro" src="https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3"></audio>
 
-<!-- CONFETE -->
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <script>
-
 let score = 0;
 let usadas = 0;
 
-const frasesAcerto = ["Muito bem! 🎉","Você acertou! ⭐","Parabéns! 👏"];
-const frasesErro = ["Quase! 😅","Tente novamente!","Vamos aprender!"];
+// Substituímos os links de imagens instáveis por Emojis que funcionam em qualquer lugar
+const cards = [
+    {emoji:"🥋", q:"Qual esporte usa kimono?", o:["Judô","Futebol","Natação"], a:0},
+    {emoji:"🏊", q:"Qual esporte acontece na piscina?", o:["Natação","Corrida","Judô"], a:0},
+    {emoji:"🏀", q:"Qual esporte joga a bola na cesta?", o:["Basquete","Vôlei","Tênis"], a:0},
+    {emoji:"🏐", q:"Qual esporte joga por cima da rede?", o:["Vôlei","Futebol","Judô"], a:0},
+    {emoji:"🏃", q:"Qual esporte é correr rápido?", o:["Corrida","Natação","Tênis"], a:0},
+    {emoji:"🎾", q:"Qual usa raquete?", o:["Tênis","Futebol","Judô"], a:0},
+    {emoji:"⚽", q:"Qual usa os pés para chutar?", o:["Futebol","Tênis","Vôlei"], a:0},
+    {emoji:"🤺", q:"Qual usa espada?", o:["Esgrima","Basquete","Natação"], a:0},
+    {emoji:"🤸", q:"Qual faz acrobacias?", o:["Ginástica","Futebol","Tênis"], a:0},
+    {emoji:"🥊", q:"Qual usa luvas para lutar?", o:["Boxe","Vôlei","Corrida"], a:0},
+    {emoji:"🚴", q:"Qual usa bicicleta?", o:["Ciclismo","Natação","Judô"], a:0},
+    {emoji:"🏹", q:"Qual usa arco e flecha?", o:["Tiro com arco","Futebol","Basquete"], a:0},
+    {emoji:"🏓", q:"Qual usa mesa e raquete pequena?", o:["Tênis de mesa","Corrida","Judô"], a:0},
+    {emoji:"🏋️", q:"Qual levanta peso?", o:["Levantamento de peso","Futebol","Tênis"], a:0},
+    {emoji:"💦", q:"Qual pula na água fazendo movimentos?", o:["Saltos ornamentais","Corrida","Vôlei"], a:0},
+    {emoji:"🏄", q:"Qual usa prancha no mar?", o:["Surfe","Basquete","Judô"], a:0},
+    {emoji:"🛹", q:"Qual usa skate?", o:["Skate","Natação","Futebol"], a:0},
+    {emoji:"🚣", q:"Qual usa barco com remos?", o:["Remo","Corrida","Tênis"], a:0},
+    {emoji:"🤾", q:"Qual usa as mãos e tem goleiro?", o:["Handebol","Futebol","Tênis"], a:0},
+    {emoji:"🏈", q:"Qual corre com a bola na mão?", o:["Rugby","Vôlei","Basquete"], a:0}
+];
+
+const grid = document.getElementById("grid");
+
+cards.forEach((c, i) => {
+    const div = document.createElement("div");
+    div.className = "card";
+    div.innerHTML = `<i>${c.emoji}</i><span>CARTA ${i+1}</span>`;
+    div.onclick = () => openCard(i, div);
+    grid.appendChild(div);
+});
 
 function falarMascote(texto){
     document.getElementById("falaMascote").innerText = texto;
 }
-
-const cards = [
-
-{img:"https://img.icons8.com/fluency/200/judo.png", q:"Qual esporte usa kimono?", o:["Judô","Futebol","Natação"], a:0},
-
-{img:"https://img.icons8.com/fluency/200/swimming.png", q:"Qual esporte acontece na piscina?", o:["Natação","Corrida","Judô"], a:0},
-
-{img:"https://img.icons8.com/fluency/200/basketball.png", q:"Qual esporte joga a bola na cesta?", o:["Basquete","Vôlei","Tênis"], a:0},
-
-{img:"https://img.icons8.com/fluency/200/volleyball.png", q:"Qual esporte joga por cima da rede?", o:["Vôlei","Futebol","Judô"], a:0},
-
-{img:"https://img.icons8.com/fluency/200/running.png", q:"Qual esporte é correr rápido?", o:["Corrida","Natação","Tênis"], a:0},
-
-{img:"https://img.icons8.com/fluency/200/tennis.png", q:"Qual usa raquete?", o:["Tênis","Futebol","Judô"], a:0},
-
-{img:"https://img.icons8.com/fluency/200/football.png", q:"Qual usa os pés para chutar?", o:["Futebol","Tênis","Vôlei"], a:0},
-
-{img:"https://img.icons8.com/fluency/200/fencing.png", q:"Qual usa espada?", o:["Esgrima","Basquete","Natação"], a:0},
-
-{img:"https://img.icons8.com/fluency/200/gymnastics.png", q:"Qual faz acrobacias?", o:["Ginástica","Futebol","Tênis"], a:0},
-
-{img:"https://img.icons8.com/fluency/200/boxing.png", q:"Qual usa luvas para lutar?", o:["Boxe","Vôlei","Corrida"], a:0},
-
-{img:"https://img.icons8.com/fluency/200/cycling.png", q:"Qual usa bicicleta?", o:["Ciclismo","Natação","Judô"], a:0},
-
-{img:"https://img.icons8.com/fluency/200/archery.png", q:"Qual usa arco e flecha?", o:["Tiro com arco","Futebol","Basquete"], a:0},
-
-{img:"https://img.icons8.com/fluency/200/table-tennis.png", q:"Qual usa mesa e raquete pequena?", o:["Tênis de mesa","Corrida","Judô"], a:0},
-
-{img:"https://img.icons8.com/fluency/200/weightlifting.png", q:"Qual levanta peso?", o:["Levantamento de peso","Futebol","Tênis"], a:0},
-
-{img:"https://img.icons8.com/fluency/200/diving.png", q:"Qual pula na água fazendo movimentos?", o:["Saltos ornamentais","Corrida","Vôlei"], a:0},
-
-{img:"https://img.icons8.com/fluency/200/surfing.png", q:"Qual usa prancha no mar?", o:["Surfe","Basquete","Judô"], a:0},
-
-{img:"https://img.icons8.com/fluency/200/skateboard.png", q:"Qual usa skate?", o:["Skate","Natação","Futebol"], a:0},
-
-{img:"https://img.icons8.com/fluency/200/rowing.png", q:"Qual usa barco com remos?", o:["Remo","Corrida","Tênis"], a:0},
-
-{img:"https://img.icons8.com/fluency/200/handball.png", q:"Qual usa as mãos e tem goleiro?", o:["Handebol","Futebol","Tênis"], a:0},
-
-{img:"https://img.icons8.com/fluency/200/rugby.png", q:"Qual corre com a bola na mão?", o:["Rugby","Vôlei","Basquete"], a:0}
-
-];
-const grid = document.getElementById("grid");
-
-cards.forEach((c,i)=>{
-    const div = document.createElement("div");
-    div.className="card";
-    div.innerText="Carta "+(i+1);
-    div.onclick=()=>openCard(i, div);
-    grid.appendChild(div);
-});
 
 function openCard(i, el){
     const c = cards[i];
     const box = document.getElementById("box");
 
     box.innerHTML = `
-        <div class="close" onclick="fechar()">X</div>
-        <img src="${c.img}">
+        <span class="emoji-pergunta">${c.emoji}</span>
         <div class="pergunta">${c.q}</div>
-
-        ${c.o.map((op,idx)=>`
-            <div class="opcao ${idx==0?'a':idx==1?'b':'c'}"
-            onclick="responder(${idx},${c.a}, this)">
-            ${op}
-            </div>
+        ${c.o.map((op, idx) => `
+            <button class="opcao ${idx==0?'a':idx==1?'b':'c'}" 
+                    onclick="responder(${idx}, ${c.a}, this)">
+                ${op}
+            </button>
         `).join("")}
     `;
 
-    document.getElementById("modal").style.display="flex";
+    document.getElementById("modal").style.display = "flex";
     el.classList.add("used");
 }
 
 function responder(sel, correta, el){
+    const botoes = document.querySelectorAll(".opcao");
+    botoes.forEach(b => b.style.pointerEvents = "none");
 
-    const opcoes = document.querySelectorAll(".opcao");
-    opcoes.forEach(o => o.style.pointerEvents="none");
-
-    // mostra a correta
-    opcoes.forEach((op, idx)=>{
-        if(idx==correta) op.classList.add("correct");
-    });
-
-    if(sel==correta){
-
-        document.getElementById("acerto").currentTime = 0;
+    if(sel == correta){
+        el.classList.add("correct");
         document.getElementById("acerto").play();
-
-        confetti({particleCount:120, spread:80});
-
-        falarMascote(frasesAcerto[Math.floor(Math.random()*frasesAcerto.length)]);
-
-        score++;
-        document.getElementById("score").innerText=score;
-
-        usadas++;
-
-        // ⏱️ TEMPO MELHOR (ANTES ERA MUITO RÁPIDO)
-        setTimeout(()=>{
-            fechar();
-
-            if(usadas==cards.length){
-                document.getElementById("final").style.display="block";
-                falarMascote("Você conseguiu! 🏆");
-            }
-
-        }, 1500);
-
+        confetti({particleCount: 150, spread: 70, origin: { y: 0.6 }});
+        falarMascote("UAU! Você é fera! 🌟");
+        score += 10;
+        document.getElementById("score").innerText = score;
     } else {
-
         el.classList.add("wrong");
-
-        document.getElementById("erro").currentTime = 0;
+        botoes[correta].classList.add("correct");
         document.getElementById("erro").play();
-
-        falarMascote(frasesErro[Math.floor(Math.random()*frasesErro.length)]);
-
-        usadas++;
-
-        // ⏱️ MAIS TEMPO PARA APRENDER
-        setTimeout(()=>{
-            fechar();
-
-            if(usadas==cards.length){
-                document.getElementById("final").style.display="block";
-            }
-
-        }, 3000);
+        falarMascote("Quase lá! Vamos treinar! 💪");
     }
-}
-function fechar(){
-    document.getElementById("modal").style.display="none";
-}
 
+    usadas++;
+    setTimeout(() => {
+        document.getElementById("modal").style.display = "none";
+        if(usadas == cards.length) {
+            document.getElementById("final").style.display = "flex";
+        }
+    }, 2000);
+}
 </script>
 
 </body>
