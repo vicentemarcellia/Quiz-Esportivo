@@ -20,7 +20,7 @@ body{
 }
 
 .titulo{
-    font-size:35px;
+    font-size:30px;
     font-weight:bold;
     background: linear-gradient(to right, yellow, cyan, lime);
     -webkit-background-clip:text;
@@ -50,7 +50,6 @@ body{
     justify-content:center;
     align-items:center;
     cursor:pointer;
-    transition:0.3s;
 }
 
 .card:hover{ transform:scale(1.05); }
@@ -74,17 +73,17 @@ body{
     color:black;
     padding:20px;
     border-radius:20px;
-    width:450px;
+    width:420px;
     text-align:center;
     position:relative;
 }
 
-.box img{ width:150px; }
+.box img{ width:140px; }
 
 .pergunta{ font-size:20px; margin:10px 0; }
 
 .opcao{
-    margin:10px;
+    margin:8px;
     padding:12px;
     border-radius:15px;
     color:white;
@@ -110,20 +109,41 @@ body{
     cursor:pointer;
 }
 
+/* MASCOTE */
+.mascote{
+    position:fixed;
+    bottom:20px;
+    left:20px;
+    text-align:center;
+}
+
+.mascote img{
+    width:80px;
+}
+
+.balao{
+    background:white;
+    color:black;
+    padding:10px;
+    border-radius:15px;
+    margin-bottom:5px;
+    max-width:150px;
+    font-size:14px;
+}
+
 /* FINAL */
 .final{
     display:none;
     text-align:center;
-    margin-top:50px;
+    margin-top:40px;
 }
-
 </style>
 </head>
 
 <body>
 
 <div class="topo">
-<div class="titulo">🏆 QUIZ ESPORTIVO DO BEM</div>
+<div class="titulo">🏆 QUIZ ESPORTIVO</div>
 <div class="pontos">⭐ <span id="score">0</span></div>
 </div>
 
@@ -138,10 +158,15 @@ body{
 <p>Você completou o jogo!</p>
 </div>
 
+<!-- MASCOTE -->
+<div class="mascote">
+<div class="balao" id="falaMascote">Vamos jogar!</div>
+<img src="https://cdn-icons-png.flaticon.com/512/616/616408.png">
+</div>
+
 <!-- ÁUDIOS -->
 <audio id="acerto" src="https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3"></audio>
 <audio id="erro" src="https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3"></audio>
-<audio id="bg" src="https://assets.mixkit.co/music/preview/mixkit-game-level-music-689.mp3" loop></audio>
 
 <!-- CONFETE -->
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -151,33 +176,19 @@ body{
 let score = 0;
 let usadas = 0;
 
-document.getElementById("bg").volume = 0.3;
+const frasesAcerto = ["Muito bem! 🎉","Você acertou! ⭐","Parabéns! 👏"];
+const frasesErro = ["Quase! 😅","Tente novamente!","Vamos aprender!"];
 
-document.body.addEventListener("click", ()=>{
-    document.getElementById("bg").play();
-}, {once:true});
+function falarMascote(texto){
+    document.getElementById("falaMascote").innerText = texto;
+}
 
 const cards = [
 {img:"https://img.icons8.com/color/200/judo.png", q:"Qual esporte usa kimono?", o:["Futebol","Judô","Natação"], a:1},
 {img:"https://img.icons8.com/color/200/swimming.png", q:"Qual acontece na água?", o:["Natação","Corrida","Tênis"], a:0},
 {img:"https://img.icons8.com/color/200/basketball.png", q:"Qual usa cesta?", o:["Basquete","Vôlei","Judô"], a:0},
 {img:"https://img.icons8.com/color/200/volleyball.png", q:"Qual usa rede?", o:["Vôlei","Futebol","Corrida"], a:0},
-{img:"https://img.icons8.com/color/200/running.png", q:"Qual é correr?", o:["Corrida","Judô","Tênis"], a:0},
-{img:"https://img.icons8.com/color/200/tennis.png", q:"Qual usa raquete?", o:["Tênis","Basquete","Futebol"], a:0},
-{img:"https://img.icons8.com/color/200/soccer-ball.png", q:"Qual usa os pés?", o:["Futebol","Tênis","Judô"], a:0},
-{img:"https://img.icons8.com/color/200/swimming.png", q:"Qual usa piscina?", o:["Natação","Basquete","Corrida"], a:0},
-{img:"https://img.icons8.com/color/200/judo.png", q:"Qual é luta?", o:["Judô","Tênis","Vôlei"], a:0},
-{img:"https://img.icons8.com/color/200/volleyball.png", q:"Qual joga com rede?", o:["Vôlei","Futebol","Corrida"], a:0},
-{img:"https://img.icons8.com/color/200/running.png", q:"Qual é em pista?", o:["Corrida","Natação","Judô"], a:0},
-{img:"https://img.icons8.com/color/200/basketball.png", q:"Qual tem bola laranja?", o:["Basquete","Tênis","Futebol"], a:0},
-{img:"https://img.icons8.com/color/200/tennis.png", q:"Qual bate na bolinha?", o:["Tênis","Corrida","Judô"], a:0},
-{img:"https://img.icons8.com/color/200/soccer-ball.png", q:"Qual tem goleiro?", o:["Futebol","Vôlei","Tênis"], a:0},
-{img:"https://img.icons8.com/color/200/swimming.png", q:"Qual mergulha?", o:["Natação","Basquete","Corrida"], a:0},
-{img:"https://img.icons8.com/color/200/judo.png", q:"Qual usa faixa?", o:["Judô","Futebol","Tênis"], a:0},
-{img:"https://img.icons8.com/color/200/volleyball.png", q:"Qual não segura a bola?", o:["Vôlei","Judô","Corrida"], a:0},
-{img:"https://img.icons8.com/color/200/running.png", q:"Qual corre rápido?", o:["Corrida","Natação","Judô"], a:0},
-{img:"https://img.icons8.com/color/200/basketball.png", q:"Qual acerta na cesta?", o:["Basquete","Futebol","Tênis"], a:0},
-{img:"https://img.icons8.com/color/200/tennis.png", q:"Qual tem rede baixa?", o:["Tênis","Futebol","Corrida"], a:0}
+{img:"https://img.icons8.com/color/200/running.png", q:"Qual é correr?", o:["Corrida","Judô","Tênis"], a:0}
 ];
 
 const grid = document.getElementById("grid");
@@ -201,8 +212,8 @@ function openCard(i, el){
 
         ${c.o.map((op,idx)=>`
             <div class="opcao ${idx==0?'a':idx==1?'b':'c'}"
-            onclick="responder(${idx},${c.a}, this, ${i})">
-            ${String.fromCharCode(65+idx)} - ${op}
+            onclick="responder(${idx},${c.a}, this)">
+            ${op}
             </div>
         `).join("")}
     `;
@@ -214,70 +225,47 @@ function openCard(i, el){
 function responder(sel, correta, el){
 
     const opcoes = document.querySelectorAll(".opcao");
+    opcoes.forEach(o => o.style.pointerEvents="none");
 
-    // BLOQUEIA CLIQUES
-    opcoes.forEach(o => o.style.pointerEvents = "none");
-
-    // DESTACA A CORRETA
-    opcoes.forEach((op, idx) => {
-        if(idx == correta){
-            op.classList.add("correct");
-        }
+    opcoes.forEach((op, idx)=>{
+        if(idx==correta) op.classList.add("correct");
     });
 
-    if(sel == correta){
+    if(sel==correta){
 
-        // ACERTO
-        document.getElementById("acerto").currentTime = 0;
         document.getElementById("acerto").play();
+        confetti({particleCount:100,spread:70});
 
-        confetti({
-            particleCount:120,
-            spread:70
-        });
+        falarMascote(frasesAcerto[Math.floor(Math.random()*frasesAcerto.length)]);
 
         score++;
-        document.getElementById("score").innerText = score;
+        document.getElementById("score").innerText=score;
 
         usadas++;
 
-        // 👉 FECHA IMEDIATAMENTE
-        setTimeout(() => {
+        setTimeout(()=>{
             fechar();
-
-            if(usadas == 20){
-                document.getElementById("final").style.display = "block";
+            if(usadas==cards.length){
+                document.getElementById("final").style.display="block";
+                falarMascote("Você conseguiu! 🏆");
             }
-
-        }, 500);
+        },500);
 
     } else {
 
-        // ERRO
         el.classList.add("wrong");
-
-        document.getElementById("erro").currentTime = 0;
         document.getElementById("erro").play();
+
+        falarMascote(frasesErro[Math.floor(Math.random()*frasesErro.length)]);
 
         usadas++;
 
-        // 👉 ESPERA PARA APRENDER
-        setTimeout(() => {
-            fechar();
-
-            if(usadas == 20){
-                document.getElementById("final").style.display = "block";
-            }
-
-        }, 2000);
-    }
-}
-    usadas++;
-
-    if(usadas==20){
         setTimeout(()=>{
-            document.getElementById("final").style.display="block";
-        },1000);
+            fechar();
+            if(usadas==cards.length){
+                document.getElementById("final").style.display="block";
+            }
+        },2000);
     }
 }
 
