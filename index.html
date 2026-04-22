@@ -7,12 +7,31 @@
 <style>
 body {
     font-family: Arial;
-    background: linear-gradient(135deg, #1e3c72, #2a5298);
-    text-align: center;
+    background: radial-gradient(circle, #0b2a6b, #071a3a);
     color: white;
+    text-align: center;
 }
 
-h1 { margin: 20px; }
+/* TOPO */
+.topo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+}
+
+.titulo {
+    font-size: 32px;
+    font-weight: bold;
+    color: gold;
+}
+
+.score-box {
+    background: #0d2c6c;
+    padding: 10px 20px;
+    border-radius: 15px;
+    border: 2px solid white;
+}
 
 /* GRID */
 .grid {
@@ -24,15 +43,16 @@ h1 { margin: 20px; }
     padding: 20px;
 }
 
-/* CARTA */
+/* CARTAS */
 .card {
-    height: 150px;
-    background: #4a4a4a;
+    height: 140px;
+    background: #3b3b3b;
     border-radius: 15px;
+    border: 2px solid #aaa;
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
+    font-size: 18px;
     cursor: pointer;
     transition: 0.3s;
 }
@@ -43,16 +63,8 @@ h1 { margin: 20px; }
 
 .card.used {
     background: #222;
-    cursor: not-allowed;
     opacity: 0.5;
-}
-
-.card img {
-    width: 50px;
-}
-
-.number {
-    margin-top: 5px;
+    cursor: not-allowed;
 }
 
 /* MODAL */
@@ -60,41 +72,75 @@ h1 { margin: 20px; }
     position: fixed;
     top:0; left:0;
     width:100%; height:100%;
-    background: rgba(0,0,0,0.8);
+    background: rgba(0,0,0,0.7);
     display:none;
     justify-content:center;
     align-items:center;
 }
 
 .modal-box {
-    background:#222;
-    padding:20px;
-    border-radius:15px;
-    width:300px;
+    background: #dfe6f5;
+    color: #0b2a6b;
+    border-radius: 20px;
+    width: 420px;
+    padding: 20px;
+    position: relative;
 }
 
+/* FECHAR */
+.close {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: red;
+    color: white;
+    border-radius: 50%;
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+/* IMAGEM */
+.modal-img {
+    width: 120px;
+    margin-bottom: 10px;
+}
+
+/* PERGUNTA */
+.question {
+    font-size: 22px;
+    margin-bottom: 15px;
+}
+
+/* OPÇÕES */
 .option {
-    background:#444;
-    margin:8px 0;
-    padding:8px;
-    border-radius:8px;
-    cursor:pointer;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin: 8px 0;
+    padding: 12px;
+    border-radius: 12px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
 }
 
-.correct { background:green; }
-.wrong { background:red; }
+/* CORES */
+.a { background: #2b6df3; }
+.b { background: #2eb82e; }
+.c { background: #8e2de2; }
 
-/* PONTUAÇÃO */
-.score {
-    font-size:20px;
-}
+.correct { background: green !important; }
+.wrong { background: red !important; }
+
 </style>
 </head>
 
 <body>
 
-<h1>🃏 Quiz Esportivo do Bem</h1>
-<div class="score">⭐ Pontos: <span id="score">0</span></div>
+<div class="topo">
+    <div class="titulo">🏆 QUIZ ESPORTIVO DO BEM ⚽</div>
+    <div class="score-box">⭐ Pontos: <span id="score">0</span></div>
+</div>
 
 <div class="grid" id="grid"></div>
 
@@ -107,27 +153,41 @@ h1 { margin: 20px; }
 let score = 0;
 
 const cards = [
-{img:"https://cdn-icons-png.flaticon.com/512/861/861512.png", q:"Qual esporte usa bola e gol?", o:["Futebol","Tênis","Natação"], a:0},
-{img:"https://cdn-icons-png.flaticon.com/512/2965/2965567.png", q:"Qual esporte é na água?", o:["Basquete","Natação","Corrida"], a:1},
-{img:"https://cdn-icons-png.flaticon.com/512/889/889455.png", q:"Qual esporte usa cesta?", o:["Futebol","Basquete","Vôlei"], a:1},
-{img:"https://cdn-icons-png.flaticon.com/512/1041/1041916.png", q:"Qual esporte usa rede?", o:["Judô","Vôlei","Corrida"], a:1},
-{img:"https://cdn-icons-png.flaticon.com/512/3043/3043887.png", q:"Qual esporte é corrida?", o:["Corrida","Tênis","Judô"], a:0},
-{img:"https://cdn-icons-png.flaticon.com/512/857/857455.png", q:"Qual esporte usa kimono?", o:["Judô","Futebol","Tênis"], a:0},
-{img:"https://cdn-icons-png.flaticon.com/512/854/854894.png", q:"Qual esporte usa raquete?", o:["Tênis","Futebol","Corrida"], a:0},
-{img:"https://cdn-icons-png.flaticon.com/512/861/861512.png", q:"Qual usa chute na bola?", o:["Futebol","Judô","Tênis"], a:0},
-{img:"https://cdn-icons-png.flaticon.com/512/2965/2965567.png", q:"Qual usa piscina?", o:["Natação","Basquete","Corrida"], a:0},
-{img:"https://cdn-icons-png.flaticon.com/512/889/889455.png", q:"Qual tem cesta alta?", o:["Basquete","Judô","Corrida"], a:0},
-
-{img:"https://cdn-icons-png.flaticon.com/512/1041/1041916.png", q:"Qual joga por cima da rede?", o:["Vôlei","Tênis","Corrida"], a:0},
-{img:"https://cdn-icons-png.flaticon.com/512/3043/3043887.png", q:"Qual corre rápido?", o:["Corrida","Natação","Judô"], a:0},
-{img:"https://cdn-icons-png.flaticon.com/512/857/857455.png", q:"Qual é luta?", o:["Judô","Futebol","Tênis"], a:0},
-{img:"https://cdn-icons-png.flaticon.com/512/854/854894.png", q:"Qual bate na bolinha?", o:["Tênis","Corrida","Futebol"], a:0},
-{img:"https://cdn-icons-png.flaticon.com/512/861/861512.png", q:"Qual usa gol?", o:["Futebol","Judô","Tênis"], a:0},
-{img:"https://cdn-icons-png.flaticon.com/512/2965/2965567.png", q:"Qual mergulha?", o:["Natação","Corrida","Basquete"], a:0},
-{img:"https://cdn-icons-png.flaticon.com/512/889/889455.png", q:"Qual joga com cesta?", o:["Basquete","Tênis","Corrida"], a:0},
-{img:"https://cdn-icons-png.flaticon.com/512/1041/1041916.png", q:"Qual tem rede?", o:["Vôlei","Judô","Corrida"], a:0},
-{img:"https://cdn-icons-png.flaticon.com/512/3043/3043887.png", q:"Qual corre no chão?", o:["Corrida","Natação","Judô"], a:0},
-{img:"https://cdn-icons-png.flaticon.com/512/854/854894.png", q:"Qual usa raquete?", o:["Tênis","Futebol","Vôlei"], a:0}
+{
+imgCard:"https://cdn-icons-png.flaticon.com/512/861/861512.png",
+imgPergunta:"https://cdn-icons-png.flaticon.com/512/857/857455.png",
+q:"Qual esporte usa kimono?",
+o:["Futebol","Judô","Natação"],
+a:1
+},
+{
+imgCard:"https://cdn-icons-png.flaticon.com/512/861/861512.png",
+imgPergunta:"https://cdn-icons-png.flaticon.com/512/2965/2965567.png",
+q:"Qual esporte é na água?",
+o:["Basquete","Natação","Corrida"],
+a:1
+},
+{
+imgCard:"https://cdn-icons-png.flaticon.com/512/861/861512.png",
+imgPergunta:"https://cdn-icons-png.flaticon.com/512/889/889455.png",
+q:"Qual usa cesta?",
+o:["Futebol","Basquete","Vôlei"],
+a:1
+},
+{
+imgCard:"https://cdn-icons-png.flaticon.com/512/861/861512.png",
+imgPergunta:"https://cdn-icons-png.flaticon.com/512/1041/1041916.png",
+q:"Qual usa rede?",
+o:["Judô","Vôlei","Corrida"],
+a:1
+},
+{
+imgCard:"https://cdn-icons-png.flaticon.com/512/861/861512.png",
+imgPergunta:"https://cdn-icons-png.flaticon.com/512/3043/3043887.png",
+q:"Qual é corrida?",
+o:["Corrida","Tênis","Judô"],
+a:0
+}
 ];
 
 const grid = document.getElementById("grid");
@@ -137,8 +197,8 @@ const modalBox = document.getElementById("modalBox");
 cards.forEach((c,i)=>{
     const card = document.createElement("div");
     card.className = "card";
-    card.innerHTML = `<img src="${c.img}"><div>Carta ${i+1}</div>`;
-    
+    card.innerHTML = `<div>Carta ${i+1}</div>`;
+
     card.onclick = () => {
         if(card.classList.contains("used")) return;
         openCard(i, card);
@@ -157,8 +217,18 @@ function openCard(i, cardElement){
     const c = cards[i];
 
     modalBox.innerHTML = `
-        <h3>${c.q}</h3>
-        ${c.o.map((opt,idx)=>`<div class="option" onclick="answer(${idx},${c.a}, this)">${opt}</div>`).join("")}
+        <div class="close" onclick="closeModal()">X</div>
+
+        <img src="${c.imgPergunta}" class="modal-img">
+
+        <div class="question">${c.q}</div>
+
+        ${c.o.map((opt,idx)=>`
+            <div class="option ${idx===0?'a':idx===1?'b':'c'}"
+            onclick="answer(${idx},${c.a}, this)">
+            ${String.fromCharCode(65+idx)} - ${opt}
+            </div>
+        `).join("")}
     `;
 
     speak(c.q);
@@ -177,7 +247,9 @@ function answer(selected, correct, el){
     }
 }
 
-modal.onclick = ()=> modal.style.display="none";
+function closeModal(){
+    modal.style.display = "none";
+}
 
 </script>
 
