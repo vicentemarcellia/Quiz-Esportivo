@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Cartas do Bem</title>
+<title>Cartas do Quiz do Bem</title>
 
 <style>
 body {
@@ -16,21 +16,27 @@ h1 {
     margin: 20px;
 }
 
+/* GRID */
 .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 15px;
+    grid-template-columns: repeat(auto-fill, 120px);
+    justify-content: center;
+    gap: 12px;
     padding: 20px;
 }
 
+/* CARTA */
 .card {
+    width: 120px;
+    height: 170px;
     perspective: 1000px;
 }
 
+/* ANIMAÇÃO */
 .inner {
-    position: relative;
     width: 100%;
-    height: 180px;
+    height: 100%;
+    position: relative;
     transition: transform 0.6s;
     transform-style: preserve-3d;
     cursor: pointer;
@@ -40,39 +46,53 @@ h1 {
     transform: rotateY(180deg);
 }
 
+/* FRENTE */
+.front {
+    background: white;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.front img {
+    width: 70px;
+    height: 70px;
+}
+
+.number {
+    color: black;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+/* VERSO */
+.back {
+    background: #222;
+    transform: rotateY(180deg);
+    border-radius: 12px;
+    font-size: 12px;
+    padding: 6px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* FRENTE/VERSO */
 .front, .back {
     position: absolute;
     width: 100%;
     height: 100%;
-    border-radius: 12px;
     backface-visibility: hidden;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 10px;
 }
 
-.front {
-    background: #00c9a7;
-    font-size: 18px;
-}
-
-.back {
-    background: #222;
-    transform: rotateY(180deg);
-    font-size: 14px;
-}
-
-.number {
-    font-size: 12px;
-    opacity: 0.7;
-}
-
+/* OPÇÕES */
 .option {
+    margin: 2px 0;
+    padding: 3px;
+    border-radius: 5px;
     background: #444;
-    margin: 3px;
-    padding: 5px;
-    border-radius: 6px;
 }
 
 .correct {
@@ -90,26 +110,47 @@ h1 {
 <script>
 
 const cards = [
-{q:"Qual esporte usa bola e gol?", o:["Futebol","Natação","Tênis"], a:0},
-{q:"Qual é na água?", o:["Basquete","Natação","Corrida"], a:1},
-{q:"Qual usa cesta?", o:["Vôlei","Basquete","Futebol"], a:1},
-{q:"Qual usa rede?", o:["Judô","Vôlei","Corrida"], a:1},
-{q:"Qual é correr?", o:["Corrida","Xadrez","Tênis"], a:0},
-{q:"Qual usa kimono?", o:["Judô","Futebol","Tênis"], a:0},
-{q:"Qual usa raquete?", o:["Tênis","Futebol","Corrida"], a:0},
-{q:"Dividir é:", o:["Ruim","Bom","Feio"], a:1},
-{q:"Ajudar é:", o:["Empurrar","Ajudar amigo","Brigar"], a:1},
-{q:"Aplaudir é:", o:["Ruim","Legal","Chato"], a:1},
-{q:"Empurrar é:", o:["Certo","Errado","Legal"], a:1},
-{q:"Respeitar é:", o:["Importante","Bobo","Inútil"], a:0},
-{q:"Esperar vez é:", o:["Errado","Certo","Chato"], a:1},
-{q:"Brincar junto é:", o:["Melhor","Pior","Tanto faz"], a:0},
-{q:"Tratar bem é:", o:["Raiva","Carinho","Tristeza"], a:1},
-{q:"No jogo devemos:", o:["Brigar","Ajudar","Ignorar"], a:1},
-{q:"Jesus ensinou:", o:["Amor","Briga","Ignorar"], a:0},
-{q:"Amizade é:", o:["Boa","Ruim","Sem valor"], a:0},
-{q:"Cooperar é:", o:["Brigar","Ajudar","Mandar"], a:1},
-{q:"O mais importante:", o:["Ganhar","Amar","Ser melhor"], a:1}
+
+{img:"https://cdn-icons-png.flaticon.com/512/861/861512.png", q:"Qual esporte usa essa bola?", o:["Futebol","Tênis","Natação"], a:0},
+
+{img:"https://cdn-icons-png.flaticon.com/512/2965/2965567.png", q:"Qual esporte é na água?", o:["Basquete","Natação","Corrida"], a:1},
+
+{img:"https://cdn-icons-png.flaticon.com/512/889/889455.png", q:"Qual usa cesta?", o:["Vôlei","Basquete","Futebol"], a:1},
+
+{img:"https://cdn-icons-png.flaticon.com/512/1041/1041916.png", q:"Qual usa rede?", o:["Judô","Vôlei","Corrida"], a:1},
+
+{img:"https://cdn-icons-png.flaticon.com/512/3043/3043887.png", q:"Qual é corrida?", o:["Corrida","Xadrez","Tênis"], a:0},
+
+{img:"https://cdn-icons-png.flaticon.com/512/857/857455.png", q:"Qual usa kimono?", o:["Judô","Futebol","Tênis"], a:0},
+
+{img:"https://cdn-icons-png.flaticon.com/512/854/854894.png", q:"Qual usa raquete?", o:["Tênis","Futebol","Corrida"], a:0},
+
+{img:"https://cdn-icons-png.flaticon.com/512/3063/3063825.png", q:"Dividir é:", o:["Ruim","Bom","Feio"], a:1},
+
+{img:"https://cdn-icons-png.flaticon.com/512/1828/1828884.png", q:"Ajudar é:", o:["Empurrar","Ajudar amigo","Brigar"], a:1},
+
+{img:"https://cdn-icons-png.flaticon.com/512/709/709496.png", q:"Aplaudir é:", o:["Ruim","Legal","Chato"], a:1},
+
+{img:"https://cdn-icons-png.flaticon.com/512/1828/1828843.png", q:"Empurrar é:", o:["Certo","Errado","Legal"], a:1},
+
+{img:"https://cdn-icons-png.flaticon.com/512/747/747376.png", q:"Respeitar é:", o:["Importante","Bobo","Inútil"], a:0},
+
+{img:"https://cdn-icons-png.flaticon.com/512/753/753345.png", q:"Esperar a vez é:", o:["Errado","Certo","Chato"], a:1},
+
+{img:"https://cdn-icons-png.flaticon.com/512/4140/4140048.png", q:"Brincar junto é:", o:["Melhor","Pior","Tanto faz"], a:0},
+
+{img:"https://cdn-icons-png.flaticon.com/512/742/742751.png", q:"Tratar bem é:", o:["Raiva","Carinho","Tristeza"], a:1},
+
+{img:"https://cdn-icons-png.flaticon.com/512/616/616408.png", q:"No jogo devemos:", o:["Brigar","Ajudar","Ignorar"], a:1},
+
+{img:"https://cdn-icons-png.flaticon.com/512/833/833472.png", q:"Jesus ensinou:", o:["Amor","Briga","Ignorar"], a:0},
+
+{img:"https://cdn-icons-png.flaticon.com/512/616/616494.png", q:"Amizade é:", o:["Boa","Ruim","Sem valor"], a:0},
+
+{img:"https://cdn-icons-png.flaticon.com/512/1077/1077012.png", q:"Cooperar é:", o:["Brigar","Ajudar","Mandar"], a:1},
+
+{img:"https://cdn-icons-png.flaticon.com/512/833/833314.png", q:"O mais importante:", o:["Ganhar","Amar","Ser melhor"], a:1}
+
 ];
 
 const grid = document.getElementById("grid");
@@ -121,8 +162,8 @@ cards.forEach((c, i) => {
     card.innerHTML = `
     <div class="inner" onclick="flip(this)">
         <div class="front">
+            <img src="${c.img}">
             <div class="number">Carta ${i+1}</div>
-            ❓
         </div>
         <div class="back">
             <div>${c.q}</div>
