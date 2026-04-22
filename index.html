@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz Esportivo do Bem - Turma Flores</title>
+    <title>Quiz Esportivo</title>
 
     <style>
         :root {
@@ -12,6 +12,12 @@
             --title-yellow: #fde047;
             --title-cyan: #22d3ee;
             --modal-bg: #f8fafc;
+            /* Cores dos Ícones SVGs */
+            --icon-orange: #fb923c;
+            --icon-blue: #3b82f6;
+            --icon-green: #4ade80;
+            --icon-red: #f87171;
+            --icon-purple: #a78bfa;
         }
 
         body {
@@ -120,10 +126,19 @@
             to { transform: scale(1); opacity: 1; }
         }
 
-        .emoji-pergunta {
-            font-size: 5rem;
-            margin-bottom: 20px;
-            display: block;
+        /* Estilo para as Novas Imagens SVG */
+        .icon-container {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .icon-container svg {
+            width: 100%;
+            height: 100%;
         }
 
         .pergunta-container {
@@ -300,27 +315,52 @@ let usadas = 0;
 const mascote = document.getElementById("mascote");
 const fala = document.getElementById("fala");
 
+// === BANCO DE IMAGENS SVG (CÓDIGO INTERNO) ===
+// Defini os ícones SVGs como strings de código para não depender de links externos.
+const svgIcons = {
+    judo: `<svg viewBox="0 0 64 64"><circle cx="32" cy="18" r="8" fill="var(--icon-orange)"/><path d="M16 30c0-4 3-8 8-8h16c5 0 8 4 8 8v6a3 3 0 0 1-3 3h-26a3 3 0 0 1-3-3v-6z" fill="var(--icon-blue)"/><rect x="22" y="39" width="20" height="4" fill="#fff"/><rect x="18" y="43" width="6" height="18" rx="2" fill="var(--icon-blue)"/><rect x="40" y="43" width="6" height="18" rx="2" fill="var(--icon-blue)"/></svg>`,
+    natacao: `<svg viewBox="0 0 64 64"><circle cx="48" cy="22" r="7" fill="var(--icon-orange)"/><path d="M10 40a8 8 0 0 1 16 0h12c2 0 4-2 4-4s-2-4-4-4h-8l-10-8h26c4 0 7 3 7 7s-3 7-7 7H10z" fill="var(--icon-blue)"/><path d="M0 50h64v14H0z" fill="#7dd3fc"/></svg>`,
+    basquete: `<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="var(--icon-orange)" fill-opacity="0.2"/><circle cx="32" cy="32" r="28" fill="var(--icon-orange)" stroke="#f97316" stroke-width="2"/><path d="M10 10c10 10 34 34 44 44M10 54c10-10 34-34 44-44M4 32h56M32 4v56" stroke="#c2410c" stroke-width="2" fill="none"/></svg>`,
+    volei: `<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="var(--icon-blue)" fill-opacity="0.2"/><circle cx="32" cy="32" r="28" fill="var(--icon-blue)" stroke="#2563eb" stroke-width="2"/><path d="M4 32c10-10 20-10 30 0s20 10 30 0M32 4c-10 10-10 20 0 30s10 20 0 30" stroke="#1d4ed8" stroke-width="2" fill="none"/></svg>`,
+    corrida: `<svg viewBox="0 0 64 64"><circle cx="45" cy="14" r="7" fill="var(--icon-orange)"/><path d="M25 24l15 3-5 12-15-5z" fill="var(--icon-blue)"/><path d="M40 27l8 12h8l-12-18z" fill="var(--icon-blue)"/><path d="M25 24l-8 10-10-2z" fill="var(--icon-orange)" fill-opacity="0.6"/><path d="M35 39l-5 15-10-2z" fill="var(--icon-blue)"/></svg>`,
+    tenis: `<svg viewBox="0 0 64 64"><path d="M10 10l12 12m10 10l12 12" stroke="#60a5fa" stroke-width="4" stroke-linecap="round"/><circle cx="48" cy="16" r="14" fill="var(--icon-green)" stroke="#84cc16" stroke-width="2"/><circle cx="16" cy="48" r="14" fill="var(--icon-green)" stroke="#84cc16" stroke-width="2"/></svg>`,
+    futebol: `<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="white" stroke="#e2e8f0" stroke-width="2"/><path d="M32 10l9 6-3 10h-11l-3-10zM15 28l6-9 11 3 3 11-9 6zM49 28l-6-9-11 3-3 11 9 6zM22 49l9-6 10 3 6-9-11 3z" fill="#0f172a"/></svg>`,
+    esgrima: `<svg viewBox="0 0 64 64"><circle cx="18" cy="16" r="7" fill="var(--icon-orange)" fill-opacity="0.3"/><path d="M12 28h12v30H12z" fill="var(--icon-blue)"/><path d="M24 28l12 10V28z" fill="var(--icon-blue)"/><path d="M36 38l24-24" stroke="#94a3b8" stroke-width="3" stroke-linecap="round"/><circle cx="36" cy="38" r="5" fill="#facc15" stroke="#eab308" stroke-width="2"/></svg>`,
+    ginastica: `<svg viewBox="0 0 64 64"><circle cx="32" cy="50" r="7" fill="var(--icon-orange)"/><path d="M22 40c0-6 4-10 10-10s10 4 10 10v4H22v-4z" fill="var(--icon-purple)"/><rect x="18" y="32" width="6" height="20" rx="2" fill="var(--icon-orange)" fill-opacity="0.6"/><rect x="40" y="32" width="6" height="20" rx="2" fill="var(--icon-orange)" fill-opacity="0.6"/></svg>`,
+    boxe: `<svg viewBox="0 0 64 64"><rect x="10" y="24" width="20" height="26" rx="6" fill="var(--icon-red)"/><rect x="34" y="24" width="20" height="26" rx="6" fill="var(--icon-red)"/><rect x="16" y="10" width="8" height="14" rx="2" fill="var(--icon-orange)" fill-opacity="0.4"/><rect x="40" y="10" width="8" height="14" rx="2" fill="var(--icon-orange)" fill-opacity="0.4"/></svg>`,
+    ciclismo: `<svg viewBox="0 0 64 64"><circle cx="18" cy="46" r="14" stroke="#94a3b8" stroke-width="3" fill="none"/><circle cx="46" cy="46" r="14" stroke="#94a3b8" stroke-width="3" fill="none"/><path d="M18 46l12-16 16 16M30 30h16M38 30V18h8" stroke="#64748b" stroke-width="3" fill="none"/></svg>`,
+    arco: `<svg viewBox="0 0 64 64"><path d="M14 4c0 0 16 12 16 28s-16 28-16 28" stroke="#d1d5db" stroke-width="3" fill="none"/><path d="M4 32h56" stroke="#94a3b8" stroke-width="4"/><path d="M50 28l10 4-10 4z" fill="#ef4444"/></svg>`,
+    tenisMesa: `<svg viewBox="0 0 64 64"><path d="M10 28v26h44V28H10z" fill="var(--icon-green)"/><path d="M8 28h48v4H8v-4z" fill="#facc15"/><rect x="40" y="10" width="16" height="16" rx="8" fill="var(--icon-red)"/></svg>`,
+    peso: `<svg viewBox="0 0 64 64"><rect x="4" y="28" width="10" height="10" rx="2" fill="#475569"/><rect x="50" y="28" width="10" height="10" rx="2" fill="#475569"/><rect x="14" y="31" width="36" height="4" fill="#94a3b8"/></svg>`,
+    salto: `<svg viewBox="0 0 64 64"><circle cx="28" cy="18" r="7" fill="var(--icon-orange)"/><path d="M18 30l10 6 10-6" fill="none" stroke="var(--icon-blue)" stroke-width="4"/><path d="M28 36v18H10" fill="none" stroke="var(--icon-blue)" stroke-width="4"/><path d="M0 50h64v14H0z" fill="#a7f3d0"/></svg>`,
+    surfe: `<svg viewBox="0 0 64 64"><path d="M8 32C8 16 32 8 56 8v48C32 56 8 48 8 32z" fill="#facc15"/><path d="M0 40h64v24H0z" fill="var(--icon-blue)"/></svg>`,
+    skate: `<svg viewBox="0 0 64 64"><rect x="8" y="24" width="48" height="12" rx="6" fill="#f97316"/><circle cx="18" cy="40" r="6" fill="#475569"/><circle cx="46" cy="40" r="6" fill="#475569"/></svg>`,
+    remo: `<svg viewBox="0 0 64 64"><path d="M10 24s10 10 44 10H10z" fill="#f97316"/><path d="M4 32h56v10H4z" fill="var(--icon-blue)"/><path d="M48 20L60 32l-12 12z" fill="#d1d5db"/></svg>`,
+    handebol: `<svg viewBox="0 0 64 64"><path d="M10 40a8 8 0 0 1 16 0h12a8 8 0 0 1 16 0" stroke="var(--icon-orange)" stroke-width="3" fill="none"/><circle cx="48" cy="18" r="7" fill="var(--icon-orange)" fill-opacity="0.8"/><rect x="22" y="28" width="20" height="20" fill="var(--icon-blue)" fill-opacity="0.4"/></svg>`,
+    rugby: `<svg viewBox="0 0 64 64"><ellipse cx="32" cy="32" rx="30" ry="20" fill="#a16207"/><path d="M32 12v40M22 14v36M42 14v36" stroke="#ca8a04" stroke-width="2" fill="none"/><path d="M22 32h20M22 24h20M22 40h20" stroke="white" stroke-width="2" fill="none"/></svg>`
+};
+
 const cards = [
-    {emoji:"🥋", q:"Qual esporte usa kimono?", o:["Judô","Futebol","Natação"], a:0},
-    {emoji:"🏊", q:"Qual esporte acontece na piscina?", o:["Natação","Corrida","Judô"], a:0},
-    {emoji:"🏀", q:"Qual esporte joga a bola na cesta?", o:["Basquete","Vôlei","Tênis"], a:0},
-    {emoji:"🏐", q:"Qual esporte joga por cima da rede?", o:["Vôlei","Futebol","Judô"], a:0},
-    {emoji:"🏃", q:"Qual esporte é correr rápido?", o:["Corrida","Natação","Tênis"], a:0},
-    {emoji:"🎾", q:"Qual usa raquete?", o:["Tênis","Futebol","Judô"], a:0},
-    {emoji:"⚽", q:"Qual usa os pés para chutar?", o:["Futebol","Tênis","Vôlei"], a:0},
-    {emoji:"🤺", q:"Qual usa espada?", o:["Esgrima","Basquete","Natação"], a:0},
-    {emoji:"🤸", q:"Qual faz acrobacias?", o:["Ginástica","Futebol","Tênis"], a:0},
-    {emoji:"🥊", q:"Qual usa luvas para lutar?", o:["Boxe","Vôlei","Corrida"], a:0},
-    {emoji:"🚴", q:"Qual usa bicicleta?", o:["Ciclismo","Natação","Judô"], a:0},
-    {emoji:"🏹", q:"Qual usa arco e flecha?", o:["Tiro com arco","Futebol","Basquete"], a:0},
-    {emoji:"🏓", q:"Qual usa mesa e raquete pequena?", o:["Tênis de mesa","Corrida","Judô"], a:0},
-    {emoji:"🏋️", q:"Qual levanta peso?", o:["Levantamento de peso","Futebol","Tênis"], a:0},
-    {emoji:"💦", q:"Qual pula na água?", o:["Saltos ornamentais","Corrida","Vôlei"], a:0},
-    {emoji:"🏄", q:"Qual usa prancha no mar?", o:["Surfe","Basquete","Judô"], a:0},
-    {emoji:"🛹", q:"Qual usa skate?", o:["Skate","Natação","Futebol"], a:0},
-    {emoji:"🚣", q:"Qual usa barco com remos?", o:["Remo","Corrida","Tênis"], a:0},
-    {emoji:"🤾", q:"Qual usa as mãos e tem goleiro?", o:["Handebol","Futebol","Tênis"], a:0},
-    {emoji:"🏈", q:"Qual corre com a bola na mão?", o:["Rugby","Vôlei","Basquete"], a:0}
+    {id: "judo", q:"Qual esporte usa kimono?", o:["Judô","Futebol","Natação"], a:0},
+    {id: "natacao", q:"Qual esporte acontece na piscina?", o:["Natação","Corrida","Judô"], a:0},
+    {id: "basquete", q:"Qual esporte joga a bola na cesta?", o:["Basquete","Vôlei","Tênis"], a:0},
+    {id: "volei", q:"Qual esporte joga por cima da rede?", o:["Vôlei","Futebol","Judô"], a:0},
+    {id: "corrida", q:"Qual esporte é correr rápido?", o:["Corrida","Natação","Tênis"], a:0},
+    {id: "tenis", q:"Qual usa raquete?", o:["Tênis","Futebol","Judô"], a:0},
+    {id: "futebol", q:"Qual usa os pés para chutar?", o:["Futebol","Tênis","Vôlei"], a:0},
+    {id: "esgrima", q:"Qual usa espada?", o:["Esgrima","Basquete","Natação"], a:0},
+    {id: "ginastica", q:"Qual faz acrobacias?", o:["Ginástica","Futebol","Tênis"], a:0},
+    {id: "boxe", q:"Qual usa luvas para lutar?", o:["Boxe","Vôlei","Corrida"], a:0},
+    {id: "ciclismo", q:"Qual usa bicicleta?", o:["Ciclismo","Natação","Judô"], a:0},
+    {id: "arco", q:"Qual usa arco e flecha?", o:["Tiro com arco","Futebol","Basquete"], a:0},
+    {id: "tenisMesa", q:"Qual usa mesa e raquete pequena?", o:["Tênis de mesa","Corrida","Judô"], a:0},
+    {id: "peso", q:"Qual levanta peso?", o:["Levantamento de peso","Futebol","Tênis"], a:0},
+    {id: "salto", q:"Qual pula na água?", o:["Saltos ornamentais","Corrida","Vôlei"], a:0},
+    {id: "surfe", q:"Qual usa prancha no mar?", o:["Surfe","Basquete","Judô"], a:0},
+    {id: "skate", q:"Qual usa skate?", o:["Skate","Natação","Futebol"], a:0},
+    {id: "remo", q:"Qual usa barco com remos?", o:["Remo","Corrida","Tênis"], a:0},
+    {id: "handebol", q:"Qual usa as mãos e tem goleiro?", o:["Handebol","Futebol","Tênis"], a:0},
+    {id: "rugby", q:"Qual corre com a bola na mão?", o:["Rugby","Vôlei","Basquete"], a:0}
 ];
 
 const grid = document.getElementById("grid");
@@ -345,13 +385,16 @@ function openCard(i, el){
     const box = document.getElementById("box");
     const letras = ['A', 'B', 'C'];
     const cores = ['a', 'b', 'c'];
+    
+    // Pega o código SVG correspondente ao ID do esporte
+    const iconSvg = svgIcons[c.id];
 
     mascote.innerText = "🤔";
     fala.innerText = "Deixe-me ver essa...";
 
     box.innerHTML = `
         <div class="close" onclick="fecharModal()">X</div>
-        <span class="emoji-pergunta">${c.emoji}</span>
+        <div class="icon-container">${iconSvg}</div>
         <div class="pergunta-container">
             <div class="pergunta">${c.q}</div>
             <button class="audio-btn" onclick="narrar('${c.q}')">🔊</button>
