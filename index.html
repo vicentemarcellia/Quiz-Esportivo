@@ -3,20 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz Esportivo do Bem</title>
+    <title>Quiz Esportivo do Bem - Turma Flores</title>
 
     <style>
         :root {
             --primary-bg: #122049;
             --secondary-bg: #1e3a8a;
-            --card-border: #3b82f6;
             --title-yellow: #fde047;
             --title-cyan: #22d3ee;
-            --score-bg: #1e293b;
             --modal-bg: #f8fafc;
-            --btn-blue: #2563eb;
-            --btn-green: #16a34a;
-            --btn-purple: #7e22ce;
         }
 
         body {
@@ -33,9 +28,9 @@
         /* TOPO */
         .topo {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
-            padding: 20px 5%;
+            padding: 25px 5%;
             background: rgba(0,0,0,0.3);
             backdrop-filter: blur(5px);
             position: sticky;
@@ -51,20 +46,7 @@
             background: linear-gradient(135deg, var(--title-yellow) 0%, var(--title-cyan) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-        }
-
-        .pontos {
-            background: var(--score-bg);
-            padding: 10px 25px;
-            border-radius: 50px;
-            border: 2px solid var(--title-yellow);
-            font-weight: bold;
-            font-size: 1.2rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 0 15px rgba(253, 224, 71, 0.3);
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
         }
 
         /* GRID */
@@ -78,7 +60,7 @@
             flex-grow: 1;
         }
 
-        /* CARTAS (APENAS O NÚMERO, COM ESTILO DA IMAGEM) */
+        /* CARTAS */
         .card {
             aspect-ratio: 16/10;
             background: #232d4b;
@@ -88,12 +70,11 @@
             align-items: center;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: 900;
             color: rgba(255,255,255,0.8);
             border: 3px solid rgba(255,255,255,0.08);
             box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-            position: relative;
         }
 
         .card:hover {
@@ -104,16 +85,16 @@
         }
 
         .card.used {
-            opacity: 0.3;
+            opacity: 0.2;
             pointer-events: none;
-            transform: scale(0.95);
+            filter: grayscale(1);
         }
 
-        /* MODAL (REESTILIZADO PARA PARECER A IMAGEM) */
+        /* MODAL */
         .modal {
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.85);
             display: none;
             justify-content: center;
             align-items: center;
@@ -124,13 +105,13 @@
         .box {
             background: var(--modal-bg);
             color: #1e293b;
-            padding: 30px;
-            border-radius: 20px;
+            padding: 35px;
+            border-radius: 25px;
             width: 100%;
-            max-width: 480px;
+            max-width: 500px;
             text-align: center;
             position: relative;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
             animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
@@ -154,18 +135,22 @@
         }
 
         .pergunta {
-            font-size: 1.4rem;
-            font-weight: 700;
+            font-size: 1.6rem;
+            font-weight: 800;
             line-height: 1.2;
-            flex-grow: 1;
             text-align: left;
+            color: #0f172a;
         }
 
-        .audio-icon {
-            font-size: 1.8rem;
-            color: #3b82f6;
+        .audio-btn {
+            font-size: 2rem;
+            background: none;
+            border: none;
             cursor: pointer;
+            transition: transform 0.2s;
         }
+
+        .audio-btn:hover { transform: scale(1.2); }
 
         .opcao {
             display: flex;
@@ -176,77 +161,85 @@
             border-radius: 15px;
             border: none;
             color: white;
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.2s;
-            position: relative;
             text-align: left;
         }
 
         .opcao-letra {
-            font-size: 1.5rem;
+            font-size: 1.6rem;
             font-weight: 900;
             margin-right: 20px;
-            width: 30px;
-            text-align: center;
+            width: 35px;
+            height: 35px;
+            background: rgba(0,0,0,0.15);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* Cores dos botões exatamente como na imagem */
-        .a { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); }
-        .b { background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); }
-        .c { background: linear-gradient(135deg, #a855f7 0%, #7e22ce 100%); }
+        .a { background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%); }
+        .b { background: linear-gradient(135deg, #22c55e 0%, #166534 100%); }
+        .c { background: linear-gradient(135deg, #a855f7 0%, #6b21a8 100%); }
 
-        .opcao:hover {
-            transform: scale(1.03);
-            box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+        .correct { 
+            background: #15803d !important; 
+            box-shadow: 0 0 20px rgba(22, 163, 74, 0.6);
+            animation: pulse 0.5s infinite alternate;
         }
 
-        .opcao:active { transform: scale(0.98); }
+        @keyframes pulse {
+            from { transform: scale(1); }
+            to { transform: scale(1.05); }
+        }
 
-        .correct { background: #15803d !important; box-shadow: 0 0 20px rgba(22, 163, 74, 0.5); }
-        .wrong { background: #b91c1c !important; }
+        .wrong { background: #b91c1c !important; opacity: 0.8; }
 
         .close {
             position: absolute;
-            top: 15px;
-            right: 15px;
+            top: -15px;
+            right: -15px;
             background: #ef4444;
             color: white;
             border-radius: 50%;
-            width: 35px;
-            height: 35px;
+            width: 40px;
+            height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
             cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            border: 2px solid white;
+            border: 3px solid white;
         }
 
-        /* MASCOTE */
-        .mascote {
+        /* MASCOTE REATIVO */
+        .mascote-area {
             position: fixed;
             bottom: 20px;
             right: 20px;
             display: flex;
             align-items: flex-end;
-            pointer-events: none;
             z-index: 5;
         }
 
         .balao {
             background: white;
-            color: black;
-            padding: 15px 20px;
+            color: #1e293b;
+            padding: 12px 20px;
             border-radius: 20px 20px 0 20px;
             margin-right: 15px;
-            max-width: 200px;
-            font-size: 15px;
+            max-width: 180px;
+            font-size: 14px;
             font-weight: bold;
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            position: relative;
+        }
+
+        .mascote-emoji {
+            font-size: 4rem;
+            transition: transform 0.3s;
         }
 
         /* FINAL */
@@ -254,13 +247,22 @@
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(18, 32, 73, 0.95);
+            background: rgba(10, 20, 50, 0.98);
             z-index: 200;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-            backdrop-filter: blur(10px);
+            padding: 20px;
+        }
+
+        .msg-final {
+            font-size: clamp(2rem, 6vw, 4rem);
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--title-yellow) 0%, var(--title-cyan) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
         }
     </style>
 </head>
@@ -268,8 +270,7 @@
 <body>
 
 <div class="topo">
-    <div class="titulo">🏆 QUIZ ESPORTIVO DO BEM</div>
-    <div class="pontos">⭐ PONTOS: <span id="score">0</span></div>
+    <div class="titulo">⚽ QUIZ ESPORTIVO DO BEM ⚽</div>
 </div>
 
 <div class="grid" id="grid"></div>
@@ -279,15 +280,14 @@
 </div>
 
 <div id="final">
-    <span style="font-size: 6rem;">🎉</span>
-    <h1 style="font-size: 4rem; margin: 10px 0; background: linear-gradient(135deg, var(--title-yellow) 0%, var(--title-cyan) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">INCRÍVEL!</h1>
-    <p id="totalFinal" style="font-size: 2rem; color: #fff; margin-bottom: 30px;"></p>
-    <button onclick="location.reload()" style="padding: 20px 40px; border-radius: 50px; border:none; background: linear-gradient(135deg, var(--title-yellow) 0%, #eab308 100%); color: #1e293b; font-weight: 900; font-size: 1.2rem; cursor:pointer; text-transform: uppercase; box-shadow: 0 5px 10px rgba(0,0,0,0.3);">JOGAR DE NOVO</button>
+    <span style="font-size: 7rem; margin-bottom: 20px;">🌸</span>
+    <div class="msg-final">Parabéns Turma Flores, vocês são incríveis!</div>
+    <button onclick="location.reload()" style="padding: 20px 50px; border-radius: 50px; border: none; background: var(--title-yellow); color: #122049; font-weight: 900; font-size: 1.4rem; cursor: pointer;">JOGAR NOVAMENTE</button>
 </div>
 
-<div class="mascote">
-    <div class="balao" id="falaMascote">Escolha uma carta para começar o jogo!</div>
-    <div style="font-size: 4rem;">🤖</div>
+<div class="mascote-area">
+    <div class="balao" id="fala">Escolha uma carta para começar!</div>
+    <div class="mascote-emoji" id="mascote">🤖</div>
 </div>
 
 <audio id="acerto" src="https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3"></audio>
@@ -296,10 +296,10 @@
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <script>
-let score = 0;
 let usadas = 0;
+const mascote = document.getElementById("mascote");
+const fala = document.getElementById("fala");
 
-// Dados do Quiz com Emojis
 const cards = [
     {emoji:"🥋", q:"Qual esporte usa kimono?", o:["Judô","Futebol","Natação"], a:0},
     {emoji:"🏊", q:"Qual esporte acontece na piscina?", o:["Natação","Corrida","Judô"], a:0},
@@ -315,7 +315,7 @@ const cards = [
     {emoji:"🏹", q:"Qual usa arco e flecha?", o:["Tiro com arco","Futebol","Basquete"], a:0},
     {emoji:"🏓", q:"Qual usa mesa e raquete pequena?", o:["Tênis de mesa","Corrida","Judô"], a:0},
     {emoji:"🏋️", q:"Qual levanta peso?", o:["Levantamento de peso","Futebol","Tênis"], a:0},
-    {emoji:"💦", q:"Qual pula na água fazendo movimentos?", o:["Saltos ornamentais","Corrida","Vôlei"], a:0},
+    {emoji:"💦", q:"Qual pula na água?", o:["Saltos ornamentais","Corrida","Vôlei"], a:0},
     {emoji:"🏄", q:"Qual usa prancha no mar?", o:["Surfe","Basquete","Judô"], a:0},
     {emoji:"🛹", q:"Qual usa skate?", o:["Skate","Natação","Futebol"], a:0},
     {emoji:"🚣", q:"Qual usa barco com remos?", o:["Remo","Corrida","Tênis"], a:0},
@@ -325,32 +325,36 @@ const cards = [
 
 const grid = document.getElementById("grid");
 
-// Gera as cartas do grid
 cards.forEach((c, i) => {
     const div = document.createElement("div");
     div.className = "card";
-    div.innerHTML = `<span>${i+1}</span>`;
+    div.innerText = i + 1;
     div.onclick = () => openCard(i, div);
     grid.appendChild(div);
 });
 
-function falarMascote(texto){
-    document.getElementById("falaMascote").innerText = texto;
+function narrar(texto) {
+    const voz = new SpeechSynthesisUtterance(texto);
+    voz.lang = 'pt-BR';
+    voz.rate = 1.1;
+    window.speechSynthesis.speak(voz);
 }
 
-// Abre o modal da pergunta
 function openCard(i, el){
     const c = cards[i];
     const box = document.getElementById("box");
     const letras = ['A', 'B', 'C'];
     const cores = ['a', 'b', 'c'];
 
+    mascote.innerText = "🤔";
+    fala.innerText = "Deixe-me ver essa...";
+
     box.innerHTML = `
         <div class="close" onclick="fecharModal()">X</div>
         <span class="emoji-pergunta">${c.emoji}</span>
         <div class="pergunta-container">
             <div class="pergunta">${c.q}</div>
-            <div class="audio-icon">🔊</div>
+            <button class="audio-btn" onclick="narrar('${c.q}')">🔊</button>
         </div>
         ${c.o.map((op, idx) => `
             <button class="opcao ${cores[idx]}" onclick="responder(${idx}, ${c.a}, this)">
@@ -362,13 +366,16 @@ function openCard(i, el){
 
     document.getElementById("modal").style.display = "flex";
     el.classList.add("used");
+    
+    // Auto-narração ao abrir
+    setTimeout(() => narrar(c.q), 500);
 }
 
 function fecharModal(){
     document.getElementById("modal").style.display = "none";
+    window.speechSynthesis.cancel();
 }
 
-// Lógica de resposta
 function responder(sel, correta, el){
     const botoes = document.querySelectorAll(".opcao");
     botoes.forEach(b => b.style.pointerEvents = "none");
@@ -376,15 +383,15 @@ function responder(sel, correta, el){
     if(sel == correta){
         el.classList.add("correct");
         document.getElementById("acerto").play();
-        confetti({particleCount: 150, spread: 70, origin: { y: 0.6 }});
-        falarMascote("UAU! Você é demais! 🤩");
-        score += 10;
-        document.getElementById("score").innerText = score;
+        mascote.innerText = "🤩";
+        fala.innerText = "Incrível! Você acertou!";
+        confetti({particleCount: 150, spread: 70});
     } else {
         el.classList.add("wrong");
-        botoes[correta].classList.add("correct");
+        botoes[correta].classList.add("correct"); // Feedback de aprendizado
         document.getElementById("erro").play();
-        falarMascote("Ah, quase lá! Na próxima você acerta! 💪");
+        mascote.innerText = "💪";
+        fala.innerText = "Quase! Aprenda essa e vamos para a próxima!";
     }
 
     usadas++;
@@ -392,9 +399,12 @@ function responder(sel, correta, el){
         fecharModal();
         if(usadas == cards.length) {
             document.getElementById("final").style.display = "flex";
-            document.getElementById("totalFinal").innerText = "Você fez " + score + " pontos no Quiz!";
+            confetti({particleCount: 300, spread: 100});
+        } else {
+            mascote.innerText = "🤖";
+            fala.innerText = "Escolha outro número!";
         }
-    }, 2000);
+    }, 2500);
 }
 </script>
 </body>
