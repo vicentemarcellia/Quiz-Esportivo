@@ -123,36 +123,47 @@ body {
 let score = 0;
 
 const cards = [
-{
-imgPergunta:"https://cdn-icons-png.flaticon.com/512/1046/1046784.png",
-q:"Qual esporte usa kimono?",
-o:["Futebol","Judô","Natação"],
-a:1
-},
-{
-imgPergunta:"https://cdn-icons-png.flaticon.com/512/2965/2965567.png",
-q:"Qual esporte é na água?",
-o:["Basquete","Natação","Corrida"],
-a:1
-},
-{
-imgPergunta:"https://cdn-icons-png.flaticon.com/512/889/889455.png",
-q:"Qual usa cesta?",
-o:["Futebol","Basquete","Vôlei"],
-a:1
-},
-{
-imgPergunta:"https://cdn-icons-png.flaticon.com/512/1041/1041916.png",
-q:"Qual usa rede?",
-o:["Judô","Vôlei","Corrida"],
-a:1
-},
-{
-imgPergunta:"https://cdn-icons-png.flaticon.com/512/3043/3043887.png",
-q:"Qual é corrida?",
-o:["Corrida","Tênis","Judô"],
-a:0
-}
+
+{imgPergunta:"https://cdn-icons-png.flaticon.com/512/1046/1046784.png", q:"Qual esporte usa kimono?", o:["Futebol","Judô","Natação"], a:1},
+
+{imgPergunta:"https://cdn-icons-png.flaticon.com/512/2965/2965567.png", q:"Qual esporte é na água?", o:["Basquete","Natação","Corrida"], a:1},
+
+{imgPergunta:"https://cdn-icons-png.flaticon.com/512/889/889455.png", q:"Qual usa cesta?", o:["Futebol","Basquete","Vôlei"], a:1},
+
+{imgPergunta:"https://cdn-icons-png.flaticon.com/512/1041/1041916.png", q:"Qual usa rede?", o:["Judô","Vôlei","Corrida"], a:1},
+
+{imgPergunta:"https://cdn-icons-png.flaticon.com/512/3043/3043887.png", q:"Qual é corrida?", o:["Corrida","Tênis","Judô"], a:0},
+
+{imgPergunta:"https://cdn-icons-png.flaticon.com/512/854/854894.png", q:"Qual usa raquete?", o:["Tênis","Futebol","Corrida"], a:0},
+
+{imgPergunta:"https://cdn-icons-png.flaticon.com/512/861/861512.png", q:"Qual usa gol?", o:["Futebol","Judô","Tênis"], a:0},
+
+{imgPergunta:"https://cdn-icons-png.flaticon.com/512/1828/1828884.png", q:"Qual usa bola laranja?", o:["Basquete","Futebol","Tênis"], a:0},
+
+{imgPergunta:"https://cdn-icons-png.flaticon.com/512/2965/2965567.png", q:"Qual usa piscina?", o:["Natação","Corrida","Basquete"], a:0},
+
+{imgPergunta:"https://cdn-icons-png.flaticon.com/512/857/857455.png", q:"Qual é luta?", o:["Judô","Futebol","Tênis"], a:0},
+
+{imgPergunta:"https://cdn-icons-png.flaticon.com/512/1041/1041916.png", q:"Qual joga com rede?", o:["Vôlei","Corrida","Judô"], a:0},
+
+{imgPergunta:"https://cdn-icons-png.flaticon.com/512/3043/3043887.png", q:"Qual corre rápido?", o:["Corrida","Natação","Judô"], a:0},
+
+{imgPergunta:"https://cdn-icons-png.flaticon.com/512/854/854894.png", q:"Qual bate na bolinha?", o:["Tênis","Futebol","Corrida"], a:0},
+
+{imgPergunta:"https://cdn-icons-png.flaticon.com/512/889/889455.png", q:"Qual tem cesta alta?", o:["Basquete","Judô","Corrida"], a:0},
+
+{imgPergunta:"https://cdn-icons-png.flaticon.com/512/2965/2965567.png", q:"Qual mergulha na água?", o:["Natação","Corrida","Basquete"], a:0},
+
+{imgPergunta:"https://cdn-icons-png.flaticon.com/512/861/861512.png", q:"Qual usa os pés na bola?", o:["Futebol","Tênis","Judô"], a:0},
+
+{imgPergunta:"https://cdn-icons-png.flaticon.com/512/857/857455.png", q:"Qual é arte marcial?", o:["Judô","Futebol","Corrida"], a:0},
+
+{imgPergunta:"https://cdn-icons-png.flaticon.com/512/1041/1041916.png", q:"Qual joga bola por cima da rede?", o:["Vôlei","Tênis","Corrida"], a:0},
+
+{imgPergunta:"https://cdn-icons-png.flaticon.com/512/3043/3043887.png", q:"Qual usa tênis para correr?", o:["Corrida","Natação","Judô"], a:0},
+
+{imgPergunta:"https://cdn-icons-png.flaticon.com/512/854/854894.png", q:"Qual usa raquete para jogar?", o:["Tênis","Futebol","Vôlei"], a:0}
+
 ];
 
 const grid = document.getElementById("grid");
