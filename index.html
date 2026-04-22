@@ -188,9 +188,23 @@ const cards = [
 {img:"https://img.icons8.com/color/200/swimming.png", q:"Qual acontece na água?", o:["Natação","Corrida","Tênis"], a:0},
 {img:"https://img.icons8.com/color/200/basketball.png", q:"Qual usa cesta?", o:["Basquete","Vôlei","Judô"], a:0},
 {img:"https://img.icons8.com/color/200/volleyball.png", q:"Qual usa rede?", o:["Vôlei","Futebol","Corrida"], a:0},
-{img:"https://img.icons8.com/color/200/running.png", q:"Qual é correr?", o:["Corrida","Judô","Tênis"], a:0}
+{img:"https://img.icons8.com/color/200/running.png", q:"Qual é correr?", o:["Corrida","Judô","Tênis"], a:0},
+{img:"https://img.icons8.com/color/200/tennis.png", q:"Qual usa raquete?", o:["Tênis","Basquete","Futebol"], a:0},
+{img:"https://img.icons8.com/color/200/soccer-ball.png", q:"Qual usa os pés?", o:["Futebol","Tênis","Judô"], a:0},
+{img:"https://img.icons8.com/color/200/swimming.png", q:"Qual usa piscina?", o:["Natação","Basquete","Corrida"], a:0},
+{img:"https://img.icons8.com/color/200/judo.png", q:"Qual é luta?", o:["Judô","Tênis","Vôlei"], a:0},
+{img:"https://img.icons8.com/color/200/volleyball.png", q:"Qual joga com rede?", o:["Vôlei","Futebol","Corrida"], a:0},
+{img:"https://img.icons8.com/color/200/running.png", q:"Qual é em pista?", o:["Corrida","Natação","Judô"], a:0},
+{img:"https://img.icons8.com/color/200/basketball.png", q:"Qual tem bola laranja?", o:["Basquete","Tênis","Futebol"], a:0},
+{img:"https://img.icons8.com/color/200/tennis.png", q:"Qual bate na bolinha?", o:["Tênis","Corrida","Judô"], a:0},
+{img:"https://img.icons8.com/color/200/soccer-ball.png", q:"Qual tem goleiro?", o:["Futebol","Vôlei","Tênis"], a:0},
+{img:"https://img.icons8.com/color/200/swimming.png", q:"Qual mergulha?", o:["Natação","Basquete","Corrida"], a:0},
+{img:"https://img.icons8.com/color/200/judo.png", q:"Qual usa faixa?", o:["Judô","Futebol","Tênis"], a:0},
+{img:"https://img.icons8.com/color/200/volleyball.png", q:"Qual não segura a bola?", o:["Vôlei","Judô","Corrida"], a:0},
+{img:"https://img.icons8.com/color/200/running.png", q:"Qual corre rápido?", o:["Corrida","Natação","Judô"], a:0},
+{img:"https://img.icons8.com/color/200/basketball.png", q:"Qual acerta na cesta?", o:["Basquete","Futebol","Tênis"], a:0},
+{img:"https://img.icons8.com/color/200/tennis.png", q:"Qual tem rede baixa?", o:["Tênis","Futebol","Corrida"], a:0}
 ];
-
 const grid = document.getElementById("grid");
 
 cards.forEach((c,i)=>{
@@ -227,14 +241,17 @@ function responder(sel, correta, el){
     const opcoes = document.querySelectorAll(".opcao");
     opcoes.forEach(o => o.style.pointerEvents="none");
 
+    // mostra a correta
     opcoes.forEach((op, idx)=>{
         if(idx==correta) op.classList.add("correct");
     });
 
     if(sel==correta){
 
+        document.getElementById("acerto").currentTime = 0;
         document.getElementById("acerto").play();
-        confetti({particleCount:100,spread:70});
+
+        confetti({particleCount:120, spread:80});
 
         falarMascote(frasesAcerto[Math.floor(Math.random()*frasesAcerto.length)]);
 
@@ -243,32 +260,39 @@ function responder(sel, correta, el){
 
         usadas++;
 
+        // ⏱️ TEMPO MELHOR (ANTES ERA MUITO RÁPIDO)
         setTimeout(()=>{
             fechar();
+
             if(usadas==cards.length){
                 document.getElementById("final").style.display="block";
                 falarMascote("Você conseguiu! 🏆");
             }
-        },500);
+
+        }, 1500);
 
     } else {
 
         el.classList.add("wrong");
+
+        document.getElementById("erro").currentTime = 0;
         document.getElementById("erro").play();
 
         falarMascote(frasesErro[Math.floor(Math.random()*frasesErro.length)]);
 
         usadas++;
 
+        // ⏱️ MAIS TEMPO PARA APRENDER
         setTimeout(()=>{
             fechar();
+
             if(usadas==cards.length){
                 document.getElementById("final").style.display="block";
             }
-        },2000);
+
+        }, 3000);
     }
 }
-
 function fechar(){
     document.getElementById("modal").style.display="none";
 }
