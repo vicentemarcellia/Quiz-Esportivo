@@ -2,13 +2,12 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Quiz Esportivo do Bem</title>
+<title>Quiz Infantil Esportivo</title>
 
 <style>
 body {
-    font-family: Arial;
-    background: radial-gradient(circle, #0b2a6b, #071a3a);
-    color: white;
+    font-family: 'Comic Sans MS', Arial;
+    background: linear-gradient(to bottom, #87CEFA, #ffffff);
     text-align: center;
 }
 
@@ -16,54 +15,43 @@ body {
 .topo {
     display: flex;
     justify-content: space-between;
-    align-items: center;
     padding: 15px 30px;
-}
-
-.titulo {
-    font-size: 32px;
-    font-weight: bold;
-    color: gold;
+    font-size: 24px;
+    color: #ff6600;
 }
 
 .score-box {
-    background: #0d2c6c;
-    padding: 10px 20px;
-    border-radius: 15px;
-    border: 2px solid white;
+    background: #fff3cd;
+    padding: 10px;
+    border-radius: 10px;
 }
 
 /* GRID */
 .grid {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    gap: 15px;
+    gap: 12px;
     max-width: 900px;
     margin: auto;
-    padding: 20px;
 }
 
 /* CARTAS */
 .card {
-    height: 140px;
-    background: #3b3b3b;
-    border-radius: 15px;
-    border: 2px solid #aaa;
+    height: 130px;
+    background: #ffcc80;
+    border-radius: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 18px;
+    font-weight: bold;
     cursor: pointer;
     transition: 0.3s;
 }
 
-.card:hover {
-    transform: scale(1.05);
-}
+.card:hover { transform: scale(1.05); }
 
 .card.used {
-    background: #222;
-    opacity: 0.5;
+    background: #ddd;
     cursor: not-allowed;
 }
 
@@ -72,62 +60,37 @@ body {
     position: fixed;
     top:0; left:0;
     width:100%; height:100%;
-    background: rgba(0,0,0,0.7);
+    background: rgba(0,0,0,0.5);
     display:none;
     justify-content:center;
     align-items:center;
 }
 
 .modal-box {
-    background: #dfe6f5;
-    color: #0b2a6b;
+    background: white;
     border-radius: 20px;
-    width: 420px;
     padding: 20px;
-    position: relative;
-}
-
-/* FECHAR */
-.close {
-    position: absolute;
-    top: -10px;
-    right: -10px;
-    background: red;
-    color: white;
-    border-radius: 50%;
-    padding: 8px 12px;
-    cursor: pointer;
+    width: 320px;
 }
 
 /* IMAGEM */
-.modal-img {
+.modal img {
     width: 120px;
-    margin-bottom: 10px;
-}
-
-/* PERGUNTA */
-.question {
-    font-size: 22px;
-    margin-bottom: 15px;
 }
 
 /* OPÇÕES */
 .option {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
     margin: 8px 0;
-    padding: 12px;
+    padding: 10px;
     border-radius: 12px;
+    cursor: pointer;
     color: white;
     font-weight: bold;
-    cursor: pointer;
 }
 
-/* CORES */
-.a { background: #2b6df3; }
-.b { background: #2eb82e; }
-.c { background: #8e2de2; }
+.a { background: #4dabf7; }
+.b { background: #51cf66; }
+.c { background: #cc5de8; }
 
 .correct { background: green !important; }
 .wrong { background: red !important; }
@@ -138,8 +101,8 @@ body {
 <body>
 
 <div class="topo">
-    <div class="titulo">🏆 QUIZ ESPORTIVO DO BEM ⚽</div>
-    <div class="score-box">⭐ Pontos: <span id="score">0</span></div>
+    <div>🏆 Quiz Infantil</div>
+    <div class="score-box">⭐ <span id="score">0</span></div>
 </div>
 
 <div class="grid" id="grid"></div>
@@ -148,41 +111,43 @@ body {
     <div class="modal-box" id="modalBox"></div>
 </div>
 
+<!-- SOM -->
+<audio id="acerto" src="https://www.soundjay.com/buttons/sounds/button-4.mp3"></audio>
+<audio id="erro" src="https://www.soundjay.com/buttons/sounds/button-10.mp3"></audio>
+
+<!-- CONFETE -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
 <script>
 
 let score = 0;
 
 const cards = [
 {
-imgCard:"https://cdn-icons-png.flaticon.com/512/861/861512.png",
-imgPergunta:"https://cdn-icons-png.flaticon.com/512/857/857455.png",
+imgPergunta:"https://cdn-icons-png.flaticon.com/512/1046/1046784.png",
 q:"Qual esporte usa kimono?",
 o:["Futebol","Judô","Natação"],
 a:1
 },
 {
-imgCard:"https://cdn-icons-png.flaticon.com/512/861/861512.png",
 imgPergunta:"https://cdn-icons-png.flaticon.com/512/2965/2965567.png",
 q:"Qual esporte é na água?",
 o:["Basquete","Natação","Corrida"],
 a:1
 },
 {
-imgCard:"https://cdn-icons-png.flaticon.com/512/861/861512.png",
 imgPergunta:"https://cdn-icons-png.flaticon.com/512/889/889455.png",
 q:"Qual usa cesta?",
 o:["Futebol","Basquete","Vôlei"],
 a:1
 },
 {
-imgCard:"https://cdn-icons-png.flaticon.com/512/861/861512.png",
 imgPergunta:"https://cdn-icons-png.flaticon.com/512/1041/1041916.png",
 q:"Qual usa rede?",
 o:["Judô","Vôlei","Corrida"],
 a:1
 },
 {
-imgCard:"https://cdn-icons-png.flaticon.com/512/861/861512.png",
 imgPergunta:"https://cdn-icons-png.flaticon.com/512/3043/3043887.png",
 q:"Qual é corrida?",
 o:["Corrida","Tênis","Judô"],
@@ -197,7 +162,7 @@ const modalBox = document.getElementById("modalBox");
 cards.forEach((c,i)=>{
     const card = document.createElement("div");
     card.className = "card";
-    card.innerHTML = `<div>Carta ${i+1}</div>`;
+    card.innerText = "Carta " + (i+1);
 
     card.onclick = () => {
         if(card.classList.contains("used")) return;
@@ -217,16 +182,12 @@ function openCard(i, cardElement){
     const c = cards[i];
 
     modalBox.innerHTML = `
-        <div class="close" onclick="closeModal()">X</div>
-
-        <img src="${c.imgPergunta}" class="modal-img">
-
-        <div class="question">${c.q}</div>
-
+        <img src="${c.imgPergunta}">
+        <h3>${c.q}</h3>
         ${c.o.map((opt,idx)=>`
             <div class="option ${idx===0?'a':idx===1?'b':'c'}"
             onclick="answer(${idx},${c.a}, this)">
-            ${String.fromCharCode(65+idx)} - ${opt}
+            ${opt}
             </div>
         `).join("")}
     `;
@@ -240,16 +201,23 @@ function openCard(i, cardElement){
 function answer(selected, correct, el){
     if(selected === correct){
         el.classList.add("correct");
+        document.getElementById("acerto").play();
         score++;
         document.getElementById("score").innerText = score;
+
+        confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 }
+        });
+
     } else {
         el.classList.add("wrong");
+        document.getElementById("erro").play();
     }
 }
 
-function closeModal(){
-    modal.style.display = "none";
-}
+modal.onclick = ()=> modal.style.display="none";
 
 </script>
 
