@@ -2,175 +2,143 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Quiz Esportivo do Bem</title>
+<title>Cartas do Bem</title>
 
 <style>
 body {
-    font-family: Arial, sans-serif;
+    font-family: Arial;
     background: linear-gradient(135deg, #1e3c72, #2a5298);
-    color: white;
     text-align: center;
+    color: white;
+}
+
+h1 {
+    margin: 20px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 15px;
     padding: 20px;
 }
 
-h1 { margin-bottom: 10px; }
-
-#game {
-    max-width: 600px;
-    margin: auto;
-    background: rgba(0,0,0,0.4);
-    padding: 20px;
-    border-radius: 15px;
+.card {
+    perspective: 1000px;
 }
 
-.card-number {
-    font-size: 14px;
-    opacity: 0.8;
-}
-
-.question {
-    font-size: 20px;
-    margin: 15px 0;
-}
-
-img {
-    width: 180px;
+.inner {
+    position: relative;
+    width: 100%;
     height: 180px;
-    object-fit: contain;
-    margin: 10px;
-    background: white;
-    border-radius: 10px;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+    cursor: pointer;
+}
+
+.card.flipped .inner {
+    transform: rotateY(180deg);
+}
+
+.front, .back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    backface-visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 10px;
+}
+
+.front {
+    background: #00c9a7;
+    font-size: 18px;
+}
+
+.back {
+    background: #222;
+    transform: rotateY(180deg);
+    font-size: 14px;
+}
+
+.number {
+    font-size: 12px;
+    opacity: 0.7;
 }
 
 .option {
-    display: block;
-    margin: 10px;
-    padding: 12px;
-    border-radius: 10px;
-    background: #00c9a7;
-    cursor: pointer;
+    background: #444;
+    margin: 3px;
+    padding: 5px;
+    border-radius: 6px;
 }
 
-.option:hover { background: #00a386; }
-
-#nextBtn {
-    margin-top: 20px;
-    padding: 10px 20px;
-    background: orange;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    display: none;
+.correct {
+    background: green;
 }
 </style>
 </head>
 
 <body>
 
-<h1>🏅 Quiz Esportivo do Bem</h1>
+<h1>🃏 Cartas do Quiz Esportivo do Bem</h1>
 
-<div id="game">
-    <div class="card-number" id="cardNumber"></div>
-    <img id="image">
-    <div class="question" id="question"></div>
-    <div id="options"></div>
-    <button id="nextBtn" onclick="nextQuestion()">Próxima ➡️</button>
-</div>
+<div class="grid" id="grid"></div>
 
 <script>
 
-const quiz = [
-
-{img:"https://upload.wikimedia.org/wikipedia/commons/6/6e/Football_%28soccer_ball%29.svg", q:"Qual esporte usa essa bola?", o:["Futebol","Tênis","Natação"], a:0},
-
-{img:"https://upload.wikimedia.org/wikipedia/commons/3/3a/Swimming_icon.png", q:"Qual esporte acontece na água?", o:["Basquete","Natação","Corrida"], a:1},
-
-{img:"https://upload.wikimedia.org/wikipedia/commons/7/7a/Basketball.png", q:"Qual esporte usa cesta?", o:["Vôlei","Basquete","Futebol"], a:1},
-
-{img:"https://upload.wikimedia.org/wikipedia/commons/0/0d/Volleyball_icon.png", q:"Qual esporte usa rede?", o:["Judô","Vôlei","Corrida"], a:1},
-
-{img:"https://upload.wikimedia.org/wikipedia/commons/1/1b/Running_icon.png", q:"Qual esporte é esse?", o:["Corrida","Xadrez","Tênis"], a:0},
-
-{img:"https://upload.wikimedia.org/wikipedia/commons/8/8e/Judo_icon.png", q:"Qual esporte usa kimono?", o:["Judô","Futebol","Vôlei"], a:0},
-
-{img:"https://upload.wikimedia.org/wikipedia/commons/4/4e/Tennis_icon.png", q:"Qual esporte usa raquete?", o:["Tênis","Corrida","Futebol"], a:0},
-
-{img:"https://upload.wikimedia.org/wikipedia/commons/5/5c/Handshake_icon.png", q:"O que essa imagem mostra?", o:["Briga","Amizade","Tristeza"], a:1},
-
-{img:"https://upload.wikimedia.org/wikipedia/commons/3/3b/Clapping_hands_icon.png", q:"O que devemos fazer com o amigo?", o:["Ignorar","Aplaudir","Empurrar"], a:1},
-
-{img:"https://upload.wikimedia.org/wikipedia/commons/6/65/Helping_icon.png", q:"O que é ajudar?", o:["Empurrar","Ajudar o amigo","Brigar"], a:1},
-
-{img:"https://upload.wikimedia.org/wikipedia/commons/2/2e/Happy_face.png", q:"Como devemos jogar?", o:["Bravos","Felizes","Tristes"], a:1},
-
-{img:"https://upload.wikimedia.org/wikipedia/commons/8/8f/Teamwork_icon.png", q:"O que é jogar em equipe?", o:["Sozinho","Juntos","Brigando"], a:1},
-
-{img:"https://upload.wikimedia.org/wikipedia/commons/9/9d/Stop_sign.png", q:"Empurrar no jogo é:", o:["Certo","Errado","Legal"], a:1},
-
-{img:"https://upload.wikimedia.org/wikipedia/commons/1/12/Heart_icon.png", q:"O mais importante é:", o:["Ganhar","Amar","Ser melhor"], a:1},
-
-{img:"https://upload.wikimedia.org/wikipedia/commons/0/0b/Star_icon.png", q:"Todos são:", o:["Sem valor","Importantes","Iguais não"], a:1},
-
-{img:"https://upload.wikimedia.org/wikipedia/commons/3/3e/Wait_icon.png", q:"Esperar sua vez é:", o:["Errado","Certo","Chato"], a:1},
-
-{img:"https://upload.wikimedia.org/wikipedia/commons/2/2d/Sharing_icon.png", q:"Dividir é:", o:["Ruim","Bom","Feio"], a:1},
-
-{img:"https://upload.wikimedia.org/wikipedia/commons/6/6b/Smile_icon.png", q:"Devemos tratar os outros com:", o:["Raiva","Carinho","Tristeza"], a:1},
-
-{img:"https://upload.wikimedia.org/wikipedia/commons/5/55/Peace_icon.png", q:"No esporte devemos ter:", o:["Briga","Paz","Grito"], a:1},
-
-{img:"https://upload.wikimedia.org/wikipedia/commons/4/4c/Love_icon.png", q:"Jesus ensinou:", o:["Amor","Briga","Ignorar"], a:0}
-
+const cards = [
+{q:"Qual esporte usa bola e gol?", o:["Futebol","Natação","Tênis"], a:0},
+{q:"Qual é na água?", o:["Basquete","Natação","Corrida"], a:1},
+{q:"Qual usa cesta?", o:["Vôlei","Basquete","Futebol"], a:1},
+{q:"Qual usa rede?", o:["Judô","Vôlei","Corrida"], a:1},
+{q:"Qual é correr?", o:["Corrida","Xadrez","Tênis"], a:0},
+{q:"Qual usa kimono?", o:["Judô","Futebol","Tênis"], a:0},
+{q:"Qual usa raquete?", o:["Tênis","Futebol","Corrida"], a:0},
+{q:"Dividir é:", o:["Ruim","Bom","Feio"], a:1},
+{q:"Ajudar é:", o:["Empurrar","Ajudar amigo","Brigar"], a:1},
+{q:"Aplaudir é:", o:["Ruim","Legal","Chato"], a:1},
+{q:"Empurrar é:", o:["Certo","Errado","Legal"], a:1},
+{q:"Respeitar é:", o:["Importante","Bobo","Inútil"], a:0},
+{q:"Esperar vez é:", o:["Errado","Certo","Chato"], a:1},
+{q:"Brincar junto é:", o:["Melhor","Pior","Tanto faz"], a:0},
+{q:"Tratar bem é:", o:["Raiva","Carinho","Tristeza"], a:1},
+{q:"No jogo devemos:", o:["Brigar","Ajudar","Ignorar"], a:1},
+{q:"Jesus ensinou:", o:["Amor","Briga","Ignorar"], a:0},
+{q:"Amizade é:", o:["Boa","Ruim","Sem valor"], a:0},
+{q:"Cooperar é:", o:["Brigar","Ajudar","Mandar"], a:1},
+{q:"O mais importante:", o:["Ganhar","Amar","Ser melhor"], a:1}
 ];
 
-let current = 0;
-let score = 0;
+const grid = document.getElementById("grid");
 
-function loadQuestion() {
-    document.getElementById("nextBtn").style.display = "none";
+cards.forEach((c, i) => {
+    const card = document.createElement("div");
+    card.className = "card";
 
-    let q = quiz[current];
+    card.innerHTML = `
+    <div class="inner" onclick="flip(this)">
+        <div class="front">
+            <div class="number">Carta ${i+1}</div>
+            ❓
+        </div>
+        <div class="back">
+            <div>${c.q}</div>
+            ${c.o.map((opt, idx) =>
+                `<div class="option ${idx===c.a ? 'correct':''}">${opt}</div>`
+            ).join("")}
+        </div>
+    </div>
+    `;
 
-    document.getElementById("cardNumber").innerText = "Carta " + (current+1) + " de 20";
-    document.getElementById("question").innerText = q.q;
-    document.getElementById("image").src = q.img;
+    grid.appendChild(card);
+});
 
-    let optionsHtml = "";
-    q.o.forEach((opt, i) => {
-        optionsHtml += `<div class="option" onclick="selectOption(${i})">${opt}</div>`;
-    });
-
-    document.getElementById("options").innerHTML = optionsHtml;
+function flip(el){
+    el.parentElement.classList.toggle("flipped");
 }
-
-function selectOption(i) {
-    let correct = quiz[current].a;
-    let options = document.querySelectorAll(".option");
-
-    options.forEach((opt, index) => {
-        opt.style.pointerEvents = "none";
-        if(index === correct) opt.style.background = "green";
-        else if(index === i) opt.style.background = "red";
-    });
-
-    if(i === correct) score++;
-
-    document.getElementById("nextBtn").style.display = "inline-block";
-}
-
-function nextQuestion() {
-    current++;
-    if(current < quiz.length) {
-        loadQuestion();
-    } else {
-        document.getElementById("game").innerHTML =
-        `<h2>Fim do jogo! 🎉</h2>
-         <p>Pontuação: ${score}/20</p>
-         <p>O mais importante é jogar com amor 💙</p>`;
-    }
-}
-
-loadQuestion();
 
 </script>
 
