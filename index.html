@@ -212,8 +212,25 @@ function openCard(i, el){
 }
 
 function responder(sel, correta, el){
-    if(sel==correta){
 
+    const opcoes = document.querySelectorAll(".opcao");
+
+    // BLOQUEIA CLIQUES DUPLOS
+    opcoes.forEach(o => o.style.pointerEvents = "none");
+
+    // DESTACA TODAS
+    opcoes.forEach((op, idx) => {
+        if(idx == correta){
+            op.classList.add("correct");
+        }
+    });
+
+    if(sel == correta){
+
+        // ACERTO
+        el.classList.add("correct");
+
+        document.getElementById("acerto").currentTime = 0;
         document.getElementById("acerto").play();
 
         confetti({
@@ -222,12 +239,30 @@ function responder(sel, correta, el){
         });
 
         score++;
-        document.getElementById("score").innerText=score;
+        document.getElementById("score").innerText = score;
 
     } else {
+
+        // ERRO
+        el.classList.add("wrong");
+
+        document.getElementById("erro").currentTime = 0;
         document.getElementById("erro").play();
     }
 
+    usadas++;
+
+    // ESPERA 2 SEGUNDOS E FECHA
+    setTimeout(() => {
+        fechar();
+
+        // FINAL DO JOGO
+        if(usadas == 20){
+            document.getElementById("final").style.display = "block";
+        }
+
+    }, 2000);
+}
     usadas++;
 
     if(usadas==20){
