@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz Esportivo</title>
-
+    <title>Quiz Esportivo - Turma Flores</title>
     <style>
         :root {
             --primary-bg: #122049;
@@ -12,17 +11,11 @@
             --title-yellow: #fde047;
             --title-cyan: #22d3ee;
             --modal-bg: #f8fafc;
-            /* Cores dos Ícones SVGs */
-            --icon-orange: #fb923c;
-            --icon-blue: #3b82f6;
-            --icon-green: #4ade80;
-            --icon-red: #f87171;
-            --icon-purple: #a78bfa;
         }
 
         body {
             margin: 0;
-            font-family: 'Segoe UI', 'Comic Sans MS', cursive, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 100%);
             color: white;
             min-height: 100vh;
@@ -35,8 +28,7 @@
         .topo {
             display: flex;
             justify-content: center;
-            align-items: center;
-            padding: 25px 5%;
+            padding: 25px;
             background: rgba(0,0,0,0.3);
             backdrop-filter: blur(5px);
             position: sticky;
@@ -45,62 +37,47 @@
         }
 
         .titulo {
-            font-size: clamp(1.4rem, 4vw, 2.5rem);
+            font-size: clamp(1.2rem, 4vw, 2.2rem);
             font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 2px;
             background: linear-gradient(135deg, var(--title-yellow) 0%, var(--title-cyan) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
+            text-transform: uppercase;
+            text-align: center;
         }
 
-        /* GRID */
+        /* GRID DE CARTAS */
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-            gap: 20px;
-            padding: 30px 5%;
-            max-width: 1000px;
+            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+            gap: 15px;
+            padding: 20px 5%;
+            max-width: 900px;
             margin: 0 auto;
-            flex-grow: 1;
         }
 
-        /* CARTAS */
         .card {
-            aspect-ratio: 16/10;
-            background: #232d4b;
-            border-radius: 12px;
+            aspect-ratio: 1/1;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            font-size: 1.8rem;
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-size: 2.5rem;
             font-weight: 900;
-            color: rgba(255,255,255,0.8);
-            border: 3px solid rgba(255,255,255,0.08);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            border: 2px solid rgba(255,255,255,0.1);
         }
 
-        .card:hover {
-            transform: translateY(-5px);
-            border-color: var(--title-cyan);
-            color: white;
-            box-shadow: 0 10px 15px rgba(0,0,0,0.3), 0 0 15px rgba(34, 211, 238, 0.3);
-        }
+        .card:hover { transform: translateY(-5px); background: rgba(255, 255, 255, 0.2); border-color: var(--title-cyan); }
+        .card.used { opacity: 0.2; pointer-events: none; filter: grayscale(1); }
 
-        .card.used {
-            opacity: 0.2;
-            pointer-events: none;
-            filter: grayscale(1);
-        }
-
-        /* MODAL */
+        /* MODAL DA PERGUNTA */
         .modal {
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.85);
+            background: rgba(0,0,0,0.9);
             display: none;
             justify-content: center;
             align-items: center;
@@ -111,198 +88,103 @@
         .box {
             background: var(--modal-bg);
             color: #1e293b;
-            padding: 35px;
+            padding: 30px;
             border-radius: 25px;
             width: 100%;
-            max-width: 500px;
+            max-width: 450px;
             text-align: center;
             position: relative;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: popIn 0.4s ease-out;
         }
 
-        @keyframes popIn {
-            from { transform: scale(0.8); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
+        @keyframes popIn { from { transform: scale(0.8); } to { transform: scale(1); } }
 
-        /* Estilo para as Novas Imagens SVG */
-        .icon-container {
-            width: 120px;
-            height: 120px;
-            margin: 0 auto 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .icon-container svg {
-            width: 100%;
-            height: 100%;
+        .emoji-grande {
+            font-size: 6rem;
+            margin-bottom: 15px;
+            display: block;
         }
 
         .pergunta-container {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 15px;
+            gap: 10px;
             margin-bottom: 25px;
         }
 
-        .pergunta {
-            font-size: 1.6rem;
-            font-weight: 800;
-            line-height: 1.2;
-            text-align: left;
-            color: #0f172a;
-        }
+        .pergunta { font-size: 1.4rem; font-weight: 800; color: #0f172a; text-align: left; line-height: 1.2; }
 
-        .audio-btn {
-            font-size: 2rem;
-            background: none;
-            border: none;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
+        .audio-btn { background: none; border: none; cursor: pointer; font-size: 1.8rem; }
 
-        .audio-btn:hover { transform: scale(1.2); }
-
+        /* BOTÕES DE RESPOSTA */
         .opcao {
             display: flex;
             align-items: center;
             width: 100%;
             margin: 12px 0;
-            padding: 18px 25px;
-            border-radius: 15px;
+            padding: 18px;
+            border-radius: 12px;
             border: none;
             color: white;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.2s;
             text-align: left;
+            transition: transform 0.2s;
         }
 
-        .opcao-letra {
-            font-size: 1.6rem;
-            font-weight: 900;
-            margin-right: 20px;
-            width: 35px;
-            height: 35px;
-            background: rgba(0,0,0,0.15);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+        .opcao:active { transform: scale(0.98); }
 
-        .a { background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%); }
-        .b { background: linear-gradient(135deg, #22c55e 0%, #166534 100%); }
-        .c { background: linear-gradient(135deg, #a855f7 0%, #6b21a8 100%); }
+        .a { background: linear-gradient(135deg, #3b82f6, #1e40af); }
+        .b { background: linear-gradient(135deg, #22c55e, #166534); }
+        .c { background: linear-gradient(135deg, #a855f7, #6b21a8); }
 
-        .correct { 
-            background: #15803d !important; 
-            box-shadow: 0 0 20px rgba(22, 163, 74, 0.6);
-            animation: pulse 0.5s infinite alternate;
-        }
+        .correct { background: #15803d !important; animation: pulse 0.5s infinite alternate; }
+        .wrong { background: #b91c1c !important; opacity: 0.7; }
 
-        @keyframes pulse {
-            from { transform: scale(1); }
-            to { transform: scale(1.05); }
-        }
+        @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.03); } }
 
-        .wrong { background: #b91c1c !important; opacity: 0.8; }
-
-        .close {
-            position: absolute;
-            top: -15px;
-            right: -15px;
-            background: #ef4444;
-            color: white;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            cursor: pointer;
-            border: 3px solid white;
-        }
-
-        /* MASCOTE REATIVO */
+        /* MASCOTE */
         .mascote-area {
             position: fixed;
             bottom: 20px;
             right: 20px;
             display: flex;
             align-items: flex-end;
-            z-index: 5;
         }
 
         .balao {
-            background: white;
-            color: #1e293b;
-            padding: 12px 20px;
-            border-radius: 20px 20px 0 20px;
-            margin-right: 15px;
-            max-width: 180px;
-            font-size: 14px;
-            font-weight: bold;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            background: white; color: #1e293b; padding: 12px;
+            border-radius: 15px 15px 0 15px; margin-right: 10px;
+            font-size: 14px; font-weight: bold; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            max-width: 150px;
         }
 
-        .mascote-emoji {
-            font-size: 4rem;
-            transition: transform 0.3s;
-        }
-
-        /* FINAL */
+        /* TELA FINAL */
         #final {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(10, 20, 50, 0.98);
-            z-index: 200;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 20px;
-        }
-
-        .msg-final {
-            font-size: clamp(2rem, 6vw, 4rem);
-            font-weight: 900;
-            background: linear-gradient(135deg, var(--title-yellow) 0%, var(--title-cyan) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 20px;
+            display: none; position: fixed; inset: 0; background: var(--primary-bg);
+            z-index: 200; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; padding: 20px;
         }
     </style>
 </head>
-
 <body>
 
-<div class="topo">
-    <div class="titulo">⚽ QUIZ ESPORTIVO DO BEM ⚽</div>
-</div>
-
+<div class="topo"><div class="titulo">⚽ QUIZ ESPORTIVO DA TURMA FLORES ⚽</div></div>
 <div class="grid" id="grid"></div>
 
-<div class="modal" id="modal">
-    <div class="box" id="box"></div>
-</div>
+<div class="modal" id="modal"><div class="box" id="box"></div></div>
 
 <div id="final">
-    <span style="font-size: 7rem; margin-bottom: 20px;">🌸</span>
-    <div class="msg-final">Parabéns Turma Flores, vocês são incríveis!</div>
-    <button onclick="location.reload()" style="padding: 20px 50px; border-radius: 50px; border: none; background: var(--title-yellow); color: #122049; font-weight: 900; font-size: 1.4rem; cursor: pointer;">JOGAR NOVAMENTE</button>
+    <span style="font-size: 7rem;">🌸</span>
+    <h1 style="color: var(--title-yellow); font-size: 2.5rem; margin: 20px 0;">Parabéns Turma Flores,<br>vocês são incríveis!</h1>
+    <button onclick="location.reload()" style="padding: 20px 50px; border-radius: 50px; border:none; background: var(--title-cyan); font-weight: 900; font-size: 1.2rem; cursor:pointer; color: #122049;">JOGAR NOVAMENTE</button>
 </div>
 
 <div class="mascote-area">
-    <div class="balao" id="fala">Escolha uma carta para começar!</div>
-    <div class="mascote-emoji" id="mascote">🤖</div>
+    <div class="balao" id="fala">Clique em um número!</div>
+    <div style="font-size: 4rem;" id="mascote">🤖</div>
 </div>
 
 <audio id="acerto" src="https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3"></audio>
@@ -311,60 +193,33 @@
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <script>
-let usadas = 0;
-const mascote = document.getElementById("mascote");
-const fala = document.getElementById("fala");
-
-// === BANCO DE IMAGENS SVG (CÓDIGO INTERNO) ===
-// Defini os ícones SVGs como strings de código para não depender de links externos.
-const svgIcons = {
-    judo: `<svg viewBox="0 0 64 64"><circle cx="32" cy="18" r="8" fill="var(--icon-orange)"/><path d="M16 30c0-4 3-8 8-8h16c5 0 8 4 8 8v6a3 3 0 0 1-3 3h-26a3 3 0 0 1-3-3v-6z" fill="var(--icon-blue)"/><rect x="22" y="39" width="20" height="4" fill="#fff"/><rect x="18" y="43" width="6" height="18" rx="2" fill="var(--icon-blue)"/><rect x="40" y="43" width="6" height="18" rx="2" fill="var(--icon-blue)"/></svg>`,
-    natacao: `<svg viewBox="0 0 64 64"><circle cx="48" cy="22" r="7" fill="var(--icon-orange)"/><path d="M10 40a8 8 0 0 1 16 0h12c2 0 4-2 4-4s-2-4-4-4h-8l-10-8h26c4 0 7 3 7 7s-3 7-7 7H10z" fill="var(--icon-blue)"/><path d="M0 50h64v14H0z" fill="#7dd3fc"/></svg>`,
-    basquete: `<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="var(--icon-orange)" fill-opacity="0.2"/><circle cx="32" cy="32" r="28" fill="var(--icon-orange)" stroke="#f97316" stroke-width="2"/><path d="M10 10c10 10 34 34 44 44M10 54c10-10 34-34 44-44M4 32h56M32 4v56" stroke="#c2410c" stroke-width="2" fill="none"/></svg>`,
-    volei: `<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="var(--icon-blue)" fill-opacity="0.2"/><circle cx="32" cy="32" r="28" fill="var(--icon-blue)" stroke="#2563eb" stroke-width="2"/><path d="M4 32c10-10 20-10 30 0s20 10 30 0M32 4c-10 10-10 20 0 30s10 20 0 30" stroke="#1d4ed8" stroke-width="2" fill="none"/></svg>`,
-    corrida: `<svg viewBox="0 0 64 64"><circle cx="45" cy="14" r="7" fill="var(--icon-orange)"/><path d="M25 24l15 3-5 12-15-5z" fill="var(--icon-blue)"/><path d="M40 27l8 12h8l-12-18z" fill="var(--icon-blue)"/><path d="M25 24l-8 10-10-2z" fill="var(--icon-orange)" fill-opacity="0.6"/><path d="M35 39l-5 15-10-2z" fill="var(--icon-blue)"/></svg>`,
-    tenis: `<svg viewBox="0 0 64 64"><path d="M10 10l12 12m10 10l12 12" stroke="#60a5fa" stroke-width="4" stroke-linecap="round"/><circle cx="48" cy="16" r="14" fill="var(--icon-green)" stroke="#84cc16" stroke-width="2"/><circle cx="16" cy="48" r="14" fill="var(--icon-green)" stroke="#84cc16" stroke-width="2"/></svg>`,
-    futebol: `<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="white" stroke="#e2e8f0" stroke-width="2"/><path d="M32 10l9 6-3 10h-11l-3-10zM15 28l6-9 11 3 3 11-9 6zM49 28l-6-9-11 3-3 11 9 6zM22 49l9-6 10 3 6-9-11 3z" fill="#0f172a"/></svg>`,
-    esgrima: `<svg viewBox="0 0 64 64"><circle cx="18" cy="16" r="7" fill="var(--icon-orange)" fill-opacity="0.3"/><path d="M12 28h12v30H12z" fill="var(--icon-blue)"/><path d="M24 28l12 10V28z" fill="var(--icon-blue)"/><path d="M36 38l24-24" stroke="#94a3b8" stroke-width="3" stroke-linecap="round"/><circle cx="36" cy="38" r="5" fill="#facc15" stroke="#eab308" stroke-width="2"/></svg>`,
-    ginastica: `<svg viewBox="0 0 64 64"><circle cx="32" cy="50" r="7" fill="var(--icon-orange)"/><path d="M22 40c0-6 4-10 10-10s10 4 10 10v4H22v-4z" fill="var(--icon-purple)"/><rect x="18" y="32" width="6" height="20" rx="2" fill="var(--icon-orange)" fill-opacity="0.6"/><rect x="40" y="32" width="6" height="20" rx="2" fill="var(--icon-orange)" fill-opacity="0.6"/></svg>`,
-    boxe: `<svg viewBox="0 0 64 64"><rect x="10" y="24" width="20" height="26" rx="6" fill="var(--icon-red)"/><rect x="34" y="24" width="20" height="26" rx="6" fill="var(--icon-red)"/><rect x="16" y="10" width="8" height="14" rx="2" fill="var(--icon-orange)" fill-opacity="0.4"/><rect x="40" y="10" width="8" height="14" rx="2" fill="var(--icon-orange)" fill-opacity="0.4"/></svg>`,
-    ciclismo: `<svg viewBox="0 0 64 64"><circle cx="18" cy="46" r="14" stroke="#94a3b8" stroke-width="3" fill="none"/><circle cx="46" cy="46" r="14" stroke="#94a3b8" stroke-width="3" fill="none"/><path d="M18 46l12-16 16 16M30 30h16M38 30V18h8" stroke="#64748b" stroke-width="3" fill="none"/></svg>`,
-    arco: `<svg viewBox="0 0 64 64"><path d="M14 4c0 0 16 12 16 28s-16 28-16 28" stroke="#d1d5db" stroke-width="3" fill="none"/><path d="M4 32h56" stroke="#94a3b8" stroke-width="4"/><path d="M50 28l10 4-10 4z" fill="#ef4444"/></svg>`,
-    tenisMesa: `<svg viewBox="0 0 64 64"><path d="M10 28v26h44V28H10z" fill="var(--icon-green)"/><path d="M8 28h48v4H8v-4z" fill="#facc15"/><rect x="40" y="10" width="16" height="16" rx="8" fill="var(--icon-red)"/></svg>`,
-    peso: `<svg viewBox="0 0 64 64"><rect x="4" y="28" width="10" height="10" rx="2" fill="#475569"/><rect x="50" y="28" width="10" height="10" rx="2" fill="#475569"/><rect x="14" y="31" width="36" height="4" fill="#94a3b8"/></svg>`,
-    salto: `<svg viewBox="0 0 64 64"><circle cx="28" cy="18" r="7" fill="var(--icon-orange)"/><path d="M18 30l10 6 10-6" fill="none" stroke="var(--icon-blue)" stroke-width="4"/><path d="M28 36v18H10" fill="none" stroke="var(--icon-blue)" stroke-width="4"/><path d="M0 50h64v14H0z" fill="#a7f3d0"/></svg>`,
-    surfe: `<svg viewBox="0 0 64 64"><path d="M8 32C8 16 32 8 56 8v48C32 56 8 48 8 32z" fill="#facc15"/><path d="M0 40h64v24H0z" fill="var(--icon-blue)"/></svg>`,
-    skate: `<svg viewBox="0 0 64 64"><rect x="8" y="24" width="48" height="12" rx="6" fill="#f97316"/><circle cx="18" cy="40" r="6" fill="#475569"/><circle cx="46" cy="40" r="6" fill="#475569"/></svg>`,
-    remo: `<svg viewBox="0 0 64 64"><path d="M10 24s10 10 44 10H10z" fill="#f97316"/><path d="M4 32h56v10H4z" fill="var(--icon-blue)"/><path d="M48 20L60 32l-12 12z" fill="#d1d5db"/></svg>`,
-    handebol: `<svg viewBox="0 0 64 64"><path d="M10 40a8 8 0 0 1 16 0h12a8 8 0 0 1 16 0" stroke="var(--icon-orange)" stroke-width="3" fill="none"/><circle cx="48" cy="18" r="7" fill="var(--icon-orange)" fill-opacity="0.8"/><rect x="22" y="28" width="20" height="20" fill="var(--icon-blue)" fill-opacity="0.4"/></svg>`,
-    rugby: `<svg viewBox="0 0 64 64"><ellipse cx="32" cy="32" rx="30" ry="20" fill="#a16207"/><path d="M32 12v40M22 14v36M42 14v36" stroke="#ca8a04" stroke-width="2" fill="none"/><path d="M22 32h20M22 24h20M22 40h20" stroke="white" stroke-width="2" fill="none"/></svg>`
-};
-
 const cards = [
-    {id: "judo", q:"Qual esporte usa kimono?", o:["Judô","Futebol","Natação"], a:0},
-    {id: "natacao", q:"Qual esporte acontece na piscina?", o:["Natação","Corrida","Judô"], a:0},
-    {id: "basquete", q:"Qual esporte joga a bola na cesta?", o:["Basquete","Vôlei","Tênis"], a:0},
-    {id: "volei", q:"Qual esporte joga por cima da rede?", o:["Vôlei","Futebol","Judô"], a:0},
-    {id: "corrida", q:"Qual esporte é correr rápido?", o:["Corrida","Natação","Tênis"], a:0},
-    {id: "tenis", q:"Qual usa raquete?", o:["Tênis","Futebol","Judô"], a:0},
-    {id: "futebol", q:"Qual usa os pés para chutar?", o:["Futebol","Tênis","Vôlei"], a:0},
-    {id: "esgrima", q:"Qual usa espada?", o:["Esgrima","Basquete","Natação"], a:0},
-    {id: "ginastica", q:"Qual faz acrobacias?", o:["Ginástica","Futebol","Tênis"], a:0},
-    {id: "boxe", q:"Qual usa luvas para lutar?", o:["Boxe","Vôlei","Corrida"], a:0},
-    {id: "ciclismo", q:"Qual usa bicicleta?", o:["Ciclismo","Natação","Judô"], a:0},
-    {id: "arco", q:"Qual usa arco e flecha?", o:["Tiro com arco","Futebol","Basquete"], a:0},
-    {id: "tenisMesa", q:"Qual usa mesa e raquete pequena?", o:["Tênis de mesa","Corrida","Judô"], a:0},
-    {id: "peso", q:"Qual levanta peso?", o:["Levantamento de peso","Futebol","Tênis"], a:0},
-    {id: "salto", q:"Qual pula na água?", o:["Saltos ornamentais","Corrida","Vôlei"], a:0},
-    {id: "surfe", q:"Qual usa prancha no mar?", o:["Surfe","Basquete","Judô"], a:0},
-    {id: "skate", q:"Qual usa skate?", o:["Skate","Natação","Futebol"], a:0},
-    {id: "remo", q:"Qual usa barco com remos?", o:["Remo","Corrida","Tênis"], a:0},
-    {id: "handebol", q:"Qual usa as mãos e tem goleiro?", o:["Handebol","Futebol","Tênis"], a:0},
-    {id: "rugby", q:"Qual corre com a bola na mão?", o:["Rugby","Vôlei","Basquete"], a:0}
+    {emoji:"🥋", q:"Qual esporte usa kimono?", o:["Judô","Futebol","Natação"], a:0},
+    {emoji:"🏊", q:"Adivinhe o esporte que acontece na piscina:", o:["Natação","Corrida","Judô"], a:0},
+    {emoji:"🏀", q:"Qual esporte joga a bola na cesta?", o:["Basquete","Vôlei","Tênis"], a:0},
+    {emoji:"🏐", q:"Adivinhe o esporte que joga por cima da rede:", o:["Vôlei","Futebol","Judô"], a:0},
+    {emoji:"🏃", q:"Qual esporte é correr rápido?", o:["Corrida","Natação","Tênis"], a:0},
+    {emoji:"🎾", q:"Adivinhe o esporte que usa raquete:", o:["Tênis","Futebol","Judô"], a:0},
+    {emoji:"⚽", q:"Qual usa os pés para chutar?", o:["Futebol","Tênis","Vôlei"], a:0},
+    {emoji:"🤺", q:"Adivinhe o esporte que usa espada:", o:["Esgrima","Basquete","Natação"], a:0},
+    {emoji:"🤸", q:"Qual faz acrobacias?", o:["Ginástica","Futebol","Tênis"], a:0},
+    {emoji:"🥊", q:"Adivinhe o esporte que usa luvas para lutar:", o:["Boxe","Vôlei","Corrida"], a:0},
+    {emoji:"🚴", q:"Qual esporte usa bicicleta?", o:["Ciclismo","Natação","Judô"], a:0},
+    {emoji:"🏹", q:"Adivinhe o esporte que usa arco e flecha:", o:["Tiro com arco","Futebol","Basquete"], a:0},
+    {emoji:"🏓", q:"Qual esporte usa mesa e raquete pequena?", o:["Tênis de mesa","Corrida","Judô"], a:0},
+    {emoji:"🏋️", q:"Adivinhe o esporte que levanta peso:", o:["Levantamento de peso","Futebol","Tênis"], a:0},
+    {emoji:"💦", q:"Qual esporte pula na água?", o:["Saltos ornamentais","Corrida","Vôlei"], a:0},
+    {emoji:"🏄", q:"Adivinhe o esporte que usa prancha no mar:", o:["Surfe","Basquete","Judô"], a:0},
+    {emoji:"🛹", q:"Qual esporte usa skate?", o:["Skate","Natação","Futebol"], a:0},
+    {emoji:"🚣", q:"Adivinhe o esporte que usa barco com remos:", o:["Remo","Corrida","Tênis"], a:0},
+    {emoji:"🤾", q:"Qual esporte usa as mãos e tem goleiro?", o:["Handebol","Futebol","Tênis"], a:0},
+    {emoji:"🏈", q:"Adivinhe o esporte que corre com a bola na mão:", o:["Rugby","Vôlei","Basquete"], a:0}
 ];
 
+let usadas = 0;
 const grid = document.getElementById("grid");
 
+// Criar o grid de números
 cards.forEach((c, i) => {
     const div = document.createElement("div");
     div.className = "card";
@@ -376,47 +231,27 @@ cards.forEach((c, i) => {
 function narrar(texto) {
     const voz = new SpeechSynthesisUtterance(texto);
     voz.lang = 'pt-BR';
-    voz.rate = 1.1;
-    window.speechSynthesis.speak(voz);
+    speechSynthesis.speak(voz);
 }
 
 function openCard(i, el){
     const c = cards[i];
     const box = document.getElementById("box");
-    const letras = ['A', 'B', 'C'];
-    const cores = ['a', 'b', 'c'];
-    
-    // Pega o código SVG correspondente ao ID do esporte
-    const iconSvg = svgIcons[c.id];
-
-    mascote.innerText = "🤔";
-    fala.innerText = "Deixe-me ver essa...";
-
     box.innerHTML = `
-        <div class="close" onclick="fecharModal()">X</div>
-        <div class="icon-container">${iconSvg}</div>
+        <span class="emoji-grande">${c.emoji}</span>
         <div class="pergunta-container">
             <div class="pergunta">${c.q}</div>
             <button class="audio-btn" onclick="narrar('${c.q}')">🔊</button>
         </div>
         ${c.o.map((op, idx) => `
-            <button class="opcao ${cores[idx]}" onclick="responder(${idx}, ${c.a}, this)">
-                <span class="opcao-letra">${letras[idx]}</span>
+            <button class="opcao ${idx==0?'a':idx==1?'b':'c'}" onclick="responder(${idx}, ${c.a}, this)">
                 ${op}
             </button>
         `).join("")}
     `;
-
     document.getElementById("modal").style.display = "flex";
     el.classList.add("used");
-    
-    // Auto-narração ao abrir
-    setTimeout(() => narrar(c.q), 500);
-}
-
-function fecharModal(){
-    document.getElementById("modal").style.display = "none";
-    window.speechSynthesis.cancel();
+    narrar(c.q);
 }
 
 function responder(sel, correta, el){
@@ -426,27 +261,23 @@ function responder(sel, correta, el){
     if(sel == correta){
         el.classList.add("correct");
         document.getElementById("acerto").play();
-        mascote.innerText = "🤩";
-        fala.innerText = "Incrível! Você acertou!";
         confetti({particleCount: 150, spread: 70});
+        document.getElementById("fala").innerText = "Isso mesmo! Parabéns!";
+        document.getElementById("mascote").innerText = "🤩";
     } else {
         el.classList.add("wrong");
-        botoes[correta].classList.add("correct"); // Feedback de aprendizado
+        botoes[correta].classList.add("correct");
         document.getElementById("erro").play();
-        mascote.innerText = "💪";
-        fala.innerText = "Quase! Aprenda essa e vamos para a próxima!";
+        document.getElementById("fala").innerText = "Quase lá!";
+        document.getElementById("mascote").innerText = "💪";
     }
 
     usadas++;
     setTimeout(() => {
-        fecharModal();
-        if(usadas == cards.length) {
-            document.getElementById("final").style.display = "flex";
-            confetti({particleCount: 300, spread: 100});
-        } else {
-            mascote.innerText = "🤖";
-            fala.innerText = "Escolha outro número!";
-        }
+        document.getElementById("modal").style.display = "none";
+        document.getElementById("mascote").innerText = "🤖";
+        document.getElementById("fala").innerText = "Escolha outro número!";
+        if(usadas == cards.length) document.getElementById("final").style.display = "flex";
     }, 2500);
 }
 </script>
