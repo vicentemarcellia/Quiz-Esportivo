@@ -2,12 +2,12 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>Quiz Esportivo do Bem</title>
+<title>Quiz Infantil</title>
 
 <style>
 body{
     margin:0;
-    font-family: Arial, sans-serif;
+    font-family: 'Comic Sans MS', Arial;
     background: linear-gradient(#0b2a5b, #061a3a);
     color:white;
 }
@@ -16,117 +16,78 @@ body{
 .topo{
     display:flex;
     justify-content:space-between;
-    align-items:center;
     padding:20px 40px;
 }
 
 .titulo{
-    font-size:40px;
+    font-size:35px;
     font-weight:bold;
     background: linear-gradient(to right, yellow, cyan, lime);
-    -webkit-background-clip: text;
-    color: transparent;
+    -webkit-background-clip:text;
+    color:transparent;
 }
 
 .pontos{
     background:#0c3c8c;
     padding:10px 20px;
     border-radius:15px;
-    font-size:20px;
 }
 
 /* GRID */
 .grid{
     display:grid;
-    grid-template-columns: repeat(5, 160px);
+    grid-template-columns: repeat(5, 150px);
     justify-content:center;
     gap:20px;
-    margin-top:20px;
 }
 
 /* CARTAS */
 .card{
-    height:120px;
-    border-radius:15px;
+    height:110px;
     background:#222;
-    border:2px solid #555;
+    border-radius:15px;
     display:flex;
-    align-items:center;
     justify-content:center;
+    align-items:center;
     cursor:pointer;
-    font-weight:bold;
     transition:0.3s;
 }
 
-.card:hover{
-    transform:scale(1.05);
-}
-
-.card.used{
-    opacity:0.3;
-    pointer-events:none;
-}
+.card:hover{ transform:scale(1.05); }
+.card.used{ opacity:0.3; pointer-events:none; }
 
 /* MODAL */
 .modal{
     position:fixed;
-    top:0;
-    left:0;
     width:100%;
     height:100%;
+    top:0;
+    left:0;
     background:rgba(0,0,0,0.7);
     display:none;
     justify-content:center;
     align-items:center;
 }
 
-/* CAIXA */
 .box{
-    background:#f2f2f2;
+    background:#fff;
     color:black;
-    border-radius:20px;
-    width:500px;
     padding:20px;
+    border-radius:20px;
+    width:450px;
     text-align:center;
     position:relative;
 }
 
-/* FECHAR */
-.close{
-    position:absolute;
-    top:-15px;
-    right:-15px;
-    background:red;
-    color:white;
-    border-radius:50%;
-    width:35px;
-    height:35px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    cursor:pointer;
-    font-weight:bold;
-}
+.box img{ width:150px; }
 
-/* IMAGEM */
-.box img{
-    width:180px;
-    margin-bottom:10px;
-}
+.pergunta{ font-size:20px; margin:10px 0; }
 
-/* PERGUNTA */
-.pergunta{
-    font-size:22px;
-    margin-bottom:15px;
-}
-
-/* BOTÕES */
 .opcao{
-    margin:10px 0;
-    padding:15px;
+    margin:10px;
+    padding:12px;
     border-radius:15px;
     color:white;
-    font-size:18px;
     cursor:pointer;
 }
 
@@ -137,24 +98,64 @@ body{
 .correct{background:green !important;}
 .wrong{background:red !important;}
 
+.close{
+    position:absolute;
+    top:-10px;
+    right:-10px;
+    background:red;
+    color:white;
+    border-radius:50%;
+    width:30px;
+    height:30px;
+    cursor:pointer;
+}
+
+/* FINAL */
+.final{
+    display:none;
+    text-align:center;
+    margin-top:50px;
+}
+
 </style>
 </head>
 
 <body>
 
 <div class="topo">
-    <div class="titulo">🏆 QUIZ ESPORTIVO DO BEM ⚽</div>
-    <div class="pontos">⭐ Pontos: <span id="score">0</span></div>
+<div class="titulo">🏆 QUIZ ESPORTIVO DO BEM</div>
+<div class="pontos">⭐ <span id="score">0</span></div>
 </div>
 
 <div class="grid" id="grid"></div>
 
 <div class="modal" id="modal">
-    <div class="box" id="box"></div>
+<div class="box" id="box"></div>
 </div>
 
+<div class="final" id="final">
+<h1>🎉 Parabéns!</h1>
+<p>Você completou o jogo!</p>
+</div>
+
+<!-- ÁUDIOS -->
+<audio id="acerto" src="https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3"></audio>
+<audio id="erro" src="https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3"></audio>
+<audio id="bg" src="https://assets.mixkit.co/music/preview/mixkit-game-level-music-689.mp3" loop></audio>
+
+<!-- CONFETE -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
 <script>
+
 let score = 0;
+let usadas = 0;
+
+document.getElementById("bg").volume = 0.3;
+
+document.body.addEventListener("click", ()=>{
+    document.getElementById("bg").play();
+}, {once:true});
 
 const cards = [
 {img:"https://img.icons8.com/color/200/judo.png", q:"Qual esporte usa kimono?", o:["Futebol","Judô","Natação"], a:1},
@@ -191,11 +192,10 @@ cards.forEach((c,i)=>{
 
 function openCard(i, el){
     const c = cards[i];
-    const modal = document.getElementById("modal");
     const box = document.getElementById("box");
 
     box.innerHTML = `
-        <div class="close" onclick="closeModal()">X</div>
+        <div class="close" onclick="fechar()">X</div>
         <img src="${c.img}">
         <div class="pergunta">${c.q}</div>
 
@@ -207,23 +207,40 @@ function openCard(i, el){
         `).join("")}
     `;
 
-    modal.style.display="flex";
+    document.getElementById("modal").style.display="flex";
     el.classList.add("used");
 }
 
 function responder(sel, correta, el){
     if(sel==correta){
-        el.classList.add("correct");
+
+        document.getElementById("acerto").play();
+
+        confetti({
+            particleCount:150,
+            spread:80
+        });
+
         score++;
         document.getElementById("score").innerText=score;
-    }else{
-        el.classList.add("wrong");
+
+    } else {
+        document.getElementById("erro").play();
+    }
+
+    usadas++;
+
+    if(usadas==20){
+        setTimeout(()=>{
+            document.getElementById("final").style.display="block";
+        },1000);
     }
 }
 
-function closeModal(){
+function fechar(){
     document.getElementById("modal").style.display="none";
 }
+
 </script>
 
 </body>
