@@ -215,10 +215,10 @@ function responder(sel, correta, el){
 
     const opcoes = document.querySelectorAll(".opcao");
 
-    // BLOQUEIA CLIQUES DUPLOS
+    // BLOQUEIA CLIQUES
     opcoes.forEach(o => o.style.pointerEvents = "none");
 
-    // DESTACA TODAS
+    // DESTACA A CORRETA
     opcoes.forEach((op, idx) => {
         if(idx == correta){
             op.classList.add("correct");
@@ -228,18 +228,28 @@ function responder(sel, correta, el){
     if(sel == correta){
 
         // ACERTO
-        el.classList.add("correct");
-
         document.getElementById("acerto").currentTime = 0;
         document.getElementById("acerto").play();
 
         confetti({
-            particleCount:150,
-            spread:80
+            particleCount:120,
+            spread:70
         });
 
         score++;
         document.getElementById("score").innerText = score;
+
+        usadas++;
+
+        // 👉 FECHA IMEDIATAMENTE
+        setTimeout(() => {
+            fechar();
+
+            if(usadas == 20){
+                document.getElementById("final").style.display = "block";
+            }
+
+        }, 500);
 
     } else {
 
@@ -248,20 +258,19 @@ function responder(sel, correta, el){
 
         document.getElementById("erro").currentTime = 0;
         document.getElementById("erro").play();
+
+        usadas++;
+
+        // 👉 ESPERA PARA APRENDER
+        setTimeout(() => {
+            fechar();
+
+            if(usadas == 20){
+                document.getElementById("final").style.display = "block";
+            }
+
+        }, 2000);
     }
-
-    usadas++;
-
-    // ESPERA 2 SEGUNDOS E FECHA
-    setTimeout(() => {
-        fechar();
-
-        // FINAL DO JOGO
-        if(usadas == 20){
-            document.getElementById("final").style.display = "block";
-        }
-
-    }, 2000);
 }
     usadas++;
 
